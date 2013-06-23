@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+header,section,footer,nav {
+  display: block;
+}
+
+a { text-decoration: none;}
+a img { border: none;}
+ul { list-style-type: none;}
+.breaker { clear: both;}
+.break-left { clear: left;}
+
+p, ul, ol, h3, h4, h5, table {
+  margin-bottom: 10px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+/* Table */
+table .num,
+table .date {
+  text-align: right
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td, th {
+  padding: 1px 5px;
+  border: 1px solid #000000;
+}
+
+fieldset {
+  padding: 10px;
+  margin-bottom: 10px;
+}
