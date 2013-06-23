@@ -8,6 +8,7 @@ class Recipe_Model extends DBObject {
   // Champs BD
   protected $_name = null;
   protected $_item_template_id = null;
+  protected $_skill_id = null;
   protected $_time = null;
 
   public function __construct($id = null) {
@@ -33,10 +34,17 @@ WHERE `item_template_id` = ".mysql_ureal_escape_string($item_template_id);
 
     return self::sql_to_list($sql);
   }
+  public static function db_get_by_skill_id($skill_id) {
+    $sql = "
+SELECT `id` FROM `".self::get_table_name()."`
+WHERE `skill_id` = ".mysql_ureal_escape_string($skill_id);
+
+    return self::sql_to_list($sql);
+  }
 
   public static function db_get_select_list( $with_null = false ) {
     $return = array();
-    
+
     if( $with_null ) {
         $return[ null ] = 'N/A';
     }
@@ -69,7 +77,14 @@ WHERE `item_template_id` = ".mysql_ureal_escape_string($item_template_id);
         $option_list[ $item_template->id ] = $item_template->name;
 
       $return .= '
-      <p class="field">'.HTMLHelper::genererSelect('item_template_id', $option_list, $this->get_item_template_id(), array(), "Item Template Id *").'<a href="'.get_page_url('admin_item_template_mod').'">Créer un objet Item Template</a></p>
+      <p class="field">'.HTMLHelper::genererSelect('item_template_id', $option_list, $this->get_item_template_id(), array(), "Item Template Id *").'<a href="'.get_page_url('admin_item_template_mod').'">Créer un objet Item Template</a></p>';
+      $option_list = array(null => 'Pas de choix');
+      $skill_list = Skill::db_get_all();
+      foreach( $skill_list as $skill)
+        $option_list[ $skill->id ] = $skill->name;
+
+      $return .= '
+      <p class="field">'.HTMLHelper::genererSelect('skill_id', $option_list, $this->get_skill_id(), array(), "Skill Id").'<a href="'.get_page_url('admin_skill_mod').'">Créer un objet Skill</a></p>
         <p class="field">'.(is_array($this->get_time())?
           HTMLHelper::genererTextArea( "time", parameters_to_string( $this->get_time() ), array(), "Time *" ):
           HTMLHelper::genererInputText( "time", $this->get_time(), array(), "Time *")).'
@@ -88,7 +103,7 @@ WHERE `item_template_id` = ".mysql_ureal_escape_string($item_template_id);
  * @return string
  */
   public static function get_message_erreur($num_error) {
-    switch($num_error) { 
+    switch($num_error) {
       case 1 : $return = "Le champ <strong>Name</strong> est obligatoire."; break;
       case 2 : $return = "Le champ <strong>Item Template Id</strong> est obligatoire."; break;
       case 3 : $return = "Le champ <strong>Time</strong> est obligatoire."; break;

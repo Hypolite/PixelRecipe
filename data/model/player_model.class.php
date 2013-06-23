@@ -170,6 +170,38 @@ AND `message_id` = '.mysql_ureal_escape_string($message_id);
 
 
 
+  public function get_player_skill_list($skill_id = null) {
+    $where = '';
+    if( ! is_null( $skill_id )) $where .= '
+AND `skill_id` = '.mysql_ureal_escape_string($skill_id);
+
+    $sql = '
+SELECT `player_id`, `skill_id`, `experience`
+FROM `player_skill`
+WHERE `player_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+    $res = mysql_uquery($sql);
+
+    return mysql_fetch_to_array($res);
+  }
+
+  public function set_player_skill( $skill_id, $experience ) {
+    $sql = "REPLACE INTO `player_skill` ( `player_id`, `skill_id`, `experience` ) VALUES (".mysql_ureal_escape_string( $this->get_id(), $skill_id, $experience ).")";
+
+    return mysql_uquery($sql);
+  }
+
+  public function del_player_skill( $skill_id = null ) {
+    $where = '';
+    if( ! is_null( $skill_id )) $where .= '
+AND `skill_id` = '.mysql_ureal_escape_string($skill_id);
+    $sql = 'DELETE FROM `player_skill`
+    WHERE `player_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+
+    return mysql_uquery($sql);
+  }
+
+
+
 
 
 

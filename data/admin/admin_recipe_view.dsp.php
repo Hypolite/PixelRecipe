@@ -21,6 +21,17 @@
         <span class="value"><a href="<?php echo get_page_url('admin_item_template_view', true, array('id' => $recipe->item_template_id ) )?>"><?php echo $option_list[ $recipe->item_template_id ]?></a></span>
       </p>
 
+<?php
+      $option_list = array(null => 'Pas de choix');
+      $skill_list = Skill::db_get_all();
+      foreach( $skill_list as $skill)
+        $option_list[ $skill->id ] = $skill->name;
+?>
+      <p class="field">
+        <span class="libelle">Skill Id</span>
+        <span class="value"><a href="<?php echo get_page_url('admin_skill_view', true, array('id' => $recipe->skill_id ) )?>"><?php echo $option_list[ $recipe->skill_id ]?></a></span>
+      </p>
+
             <p class="field">
               <span class="libelle">Time</span>
               <span class="value"><?php echo is_array($recipe->time)?nl2br(parameters_to_string( $recipe->time )):$recipe->time?></span>

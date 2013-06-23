@@ -93,6 +93,65 @@
         <p><?php echo HTMLHelper::genererButton('action',  'set_message_recipient', array('type' => 'submit'), 'Ajouter un élément')?></p>
       </fieldset>
     </form>
+    <h4>Player Skill</h4>
+<?php
+
+  $player_skill_list = $player->get_player_skill_list();
+
+  if(count($player_skill_list)) {
+?>
+    <table>
+      <thead>
+        <tr>
+          <th>Skill Id</th>
+          <th>Experience</th>          <th>Action</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <td colspan="3"><?php echo count( $player_skill_list )?> lignes</td>
+        </tr>
+      </tfoot>
+      <tbody>
+<?php
+      foreach( $player_skill_list as $player_skill ) {
+
+ 
+        $skill_id_skill = Skill::instance( $player_skill['skill_id'] );        echo '
+        <tr>
+        <td><a href="'.get_page_url('admin_skill_view', true, array('id' => $skill_id_skill->id)).'">'.$skill_id_skill->name.'</a></td>
+        <td>'.$player_skill['experience'].'</td>          <td>
+            <form action="'.get_page_url(PAGE_CODE, true, array('id' => $player->id)).'" method="post">
+              '.HTMLHelper::genererInputHidden('id', $player->id).'
+
+              '.HTMLHelper::genererInputHidden('skill_id', $skill_id_skill->id).'              '.HTMLHelper::genererButton('action',  'del_player_skill', array('type' => 'submit'), 'Supprimer').'
+            </form>
+          </td>
+        </tr>';
+      }
+?>
+      </tbody>
+    </table>
+<?php
+  }else {
+    echo '<p>Il n\'y a pas d\'éléments à afficher</p>';
+  }
+
+  $liste_valeurs_skill = Skill::db_get_select_list();?>
+    <form action="<?php echo get_page_url(PAGE_CODE, true, array('id' => $player->id))?>" method="post" class="formulaire">
+      <?php echo HTMLHelper::genererInputHidden('id', $player->id )?>
+      <fieldset>
+        <legend>Ajouter un élément</legend>
+        <p class="field">
+          <?php echo HTMLHelper::genererSelect('skill_id', $liste_valeurs_skill, null, array(), 'Skill' )?><a href="<?php echo get_page_url('admin_skill_mod')?>">Créer un objet Skill</a>
+        </p>
+        <p class="field">
+          <?php echo HTMLHelper::genererInputText('experience', null, array(), 'Experience*' )?>
+           
+        </p>
+        <p><?php echo HTMLHelper::genererButton('action',  'set_player_skill', array('type' => 'submit'), 'Ajouter un élément')?></p>
+      </fieldset>
+    </form>
 <?php
   // CUSTOM
 

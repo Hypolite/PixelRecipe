@@ -129,7 +129,7 @@ CREATE TABLE `item_template` (
   PRIMARY KEY (`id`),
   KEY `type_id` (`type_id`),
   CONSTRAINT `item_template_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `item_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -232,7 +232,7 @@ CREATE TABLE `page` (
   `rewrite_pattern` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=5193 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=5226 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -256,6 +256,24 @@ CREATE TABLE `player` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `player_skill`
+--
+
+DROP TABLE IF EXISTS `player_skill`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `player_skill` (
+  `player_id` int(11) NOT NULL,
+  `skill_id` bigint(20) NOT NULL,
+  `experience` int(11) NOT NULL,
+  PRIMARY KEY (`player_id`,`skill_id`),
+  KEY `skill_id` (`skill_id`),
+  CONSTRAINT `player_skill_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `player_skill_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `recipe`
 --
 
@@ -266,9 +284,12 @@ CREATE TABLE `recipe` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `item_template_id` bigint(20) NOT NULL,
+  `skill_id` bigint(20) DEFAULT NULL,
   `time` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `item_template_id` (`item_template_id`),
+  KEY `skill_id` (`skill_id`),
+  CONSTRAINT `recipe_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `recipe_ibfk_1` FOREIGN KEY (`item_template_id`) REFERENCES `item_template` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -345,6 +366,20 @@ CREATE TABLE `shout` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `skill`
+--
+
+DROP TABLE IF EXISTS `skill`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `skill` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `translation`
 --
 
@@ -363,7 +398,7 @@ CREATE TABLE `translation` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`,`locale`,`context`),
   KEY `translator_id` (`translator_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3368 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3389 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -375,4 +410,4 @@ CREATE TABLE `translation` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-06-23  9:35:45
+-- Dump completed on 2013-06-23 15:16:06

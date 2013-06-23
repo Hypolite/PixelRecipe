@@ -18,6 +18,7 @@
           <th>Sel.</th>
           <th>Name</th>
           <th>Item Template Id</th>
+          <th>Skill Id</th>
           <th>Time</th>        </tr>
       </thead>
       <tfoot>
@@ -35,7 +36,10 @@
 ';
       $item_template_temp = Item_Template::instance( $recipe->item_template_id);
       echo '
-          <td>'.$item_template_temp->name.'</td>
+          <td>'.$item_template_temp->name.'</td>';
+      $skill_temp = Skill::instance( $recipe->skill_id);
+      echo '
+          <td>'.$skill_temp->name.'</td>
           <td>'.(is_array($recipe->time)?nl2br(parameters_to_string($recipe->time)):$recipe->time).'</td>
           <td><a href="'.htmlentities_utf8(Page::get_url('admin_recipe_mod', array('id' => $recipe->id))).'"><img src="'.IMG.'img_html/pencil.png" alt="Modifier" title="Modifier"/></a></td>
         </tr>';
