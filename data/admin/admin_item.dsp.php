@@ -37,8 +37,10 @@
 ';
       $item_template_temp = Item_Template::instance( $item->item_template_id);
       echo '
-          <td>'.$item_template_temp->name.'</td>
-          <td>'.(is_array($item->owner_id)?nl2br(parameters_to_string($item->owner_id)):$item->owner_id).'</td>
+          <td>'.$item_template_temp->name.'</td>';
+      $player_temp = Player::instance( $item->owner_id);
+      echo '
+          <td>'.$player_temp->name.'</td>
           <td>'.(is_array($item->quality)?nl2br(parameters_to_string($item->quality)):$item->quality).'</td>
           <td>'.guess_time($item->created, GUESS_DATETIME_LOCALE).'</td>
           <td><a href="'.htmlentities_utf8(Page::get_url('admin_item_mod', array('id' => $item->id))).'"><img src="'.IMG.'img_html/pencil.png" alt="Modifier" title="Modifier"/></a></td>

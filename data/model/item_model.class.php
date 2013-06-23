@@ -22,6 +22,9 @@ class Item_Model extends DBObject {
   public function get_created()    { return guess_time($this->_created);}
 
   /* MUTATEURS */
+  public function set_owner_id($owner_id) {
+    if( is_numeric($owner_id) && (int)$owner_id == $owner_id) $data = intval($owner_id); else $data = null; $this->_owner_id = $data;
+  }
   public function set_created($date) { $this->_created = guess_time($date, GUESS_DATE_MYSQL);}
 
   /* FONCTIONS SQL */
@@ -31,6 +34,13 @@ class Item_Model extends DBObject {
     $sql = "
 SELECT `id` FROM `".self::get_table_name()."`
 WHERE `item_template_id` = ".mysql_ureal_escape_string($item_template_id);
+
+    return self::sql_to_list($sql);
+  }
+  public static function db_get_by_owner_id($owner_id) {
+    $sql = "
+SELECT `id` FROM `".self::get_table_name()."`
+WHERE `owner_id` = ".mysql_ureal_escape_string($owner_id);
 
     return self::sql_to_list($sql);
   }
@@ -70,11 +80,14 @@ WHERE `item_template_id` = ".mysql_ureal_escape_string($item_template_id);
         $option_list[ $item_template->id ] = $item_template->name;
 
       $return .= '
-      <p class="field">'.HTMLHelper::genererSelect('item_template_id', $option_list, $this->get_item_template_id(), array(), "Item Template Id *").'<a href="'.get_page_url('admin_item_template_mod').'">Créer un objet Item Template</a></p>
-        <p class="field">'.(is_array($this->get_owner_id())?
-          HTMLHelper::genererTextArea( "owner_id", parameters_to_string( $this->get_owner_id() ), array(), "Owner Id *" ):
-          HTMLHelper::genererInputText( "owner_id", $this->get_owner_id(), array(), "Owner Id *")).'
-        </p>
+      <p class="field">'.HTMLHelper::genererSelect('item_template_id', $option_list, $this->get_item_template_id(), array(), "Item Template Id *").'<a href="'.get_page_url('admin_item_template_mod').'">Créer un objet Item Template</a></p>';
+      $option_list = array();
+      $player_list = Player::db_get_all();
+      foreach( $player_list as $player)
+        $option_list[ $player->id ] = $player->name;
+
+      $return .= '
+      <p class="field">'.HTMLHelper::genererSelect('owner_id', $option_list, $this->get_owner_id(), array(), "Owner Id *").'<a href="'.get_page_url('admin_player_mod').'">Créer un objet Player</a></p>
         <p class="field">'.(is_array($this->get_quality())?
           HTMLHelper::genererTextArea( "quality", parameters_to_string( $this->get_quality() ), array(), "Quality" ):
           HTMLHelper::genererInputText( "quality", $this->get_quality(), array(), "Quality")).'
@@ -119,7 +132,7 @@ WHERE `item_template_id` = ".mysql_ureal_escape_string($item_template_id);
 
     $return[] = Member::check_compulsory($this->get_name(), 1);
     $return[] = Member::check_compulsory($this->get_item_template_id(), 2);
-    $return[] = Member::check_compulsory($this->get_owner_id(), 3);
+    $return[] = Member::check_compulsory($this->get_owner_id(), 3, true);
     $return[] = Member::check_compulsory($this->get_created(), 4);
 
     $return = array_unique($return);

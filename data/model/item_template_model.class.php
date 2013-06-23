@@ -66,11 +66,14 @@ WHERE `type_id` = ".mysql_ureal_escape_string($type_id);
         <p class="field">'.(is_array($this->get_tech())?
           HTMLHelper::genererTextArea( "tech", parameters_to_string( $this->get_tech() ), array(), "Tech" ):
           HTMLHelper::genererInputText( "tech", $this->get_tech(), array(), "Tech")).'
-        </p>
-        <p class="field">'.(is_array($this->get_type_id())?
-          HTMLHelper::genererTextArea( "type_id", parameters_to_string( $this->get_type_id() ), array(), "Type Id *" ):
-          HTMLHelper::genererInputText( "type_id", $this->get_type_id(), array(), "Type Id *")).'
-        </p>
+        </p>';
+      $option_list = array();
+      $item_type_list = Item_Type::db_get_all();
+      foreach( $item_type_list as $item_type)
+        $option_list[ $item_type->id ] = $item_type->name;
+
+      $return .= '
+      <p class="field">'.HTMLHelper::genererSelect('type_id', $option_list, $this->get_type_id(), array(), "Type Id *").'<a href="'.get_page_url('admin_item_type_mod').'">Créer un objet Item Type</a></p>
 
     </fieldset>';
 
@@ -113,6 +116,102 @@ WHERE `type_id` = ".mysql_ureal_escape_string($type_id);
     if(count($return) == 0) $return = true;
     return $return;
   }
+
+  public function get_recipe_byproduct_list($recipe_id = null) {
+    $where = '';
+    if( ! is_null( $recipe_id )) $where .= '
+AND `recipe_id` = '.mysql_ureal_escape_string($recipe_id);
+
+    $sql = '
+SELECT `recipe_id`, `item_template_id`, `quantity`
+FROM `recipe_byproduct`
+WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+    $res = mysql_uquery($sql);
+
+    return mysql_fetch_to_array($res);
+  }
+
+  public function set_recipe_byproduct( $recipe_id, $quantity ) {
+    $sql = "REPLACE INTO `recipe_byproduct` ( `recipe_id`, `item_template_id`, `quantity` ) VALUES (".mysql_ureal_escape_string( $recipe_id, $this->get_id(), $quantity ).")";
+
+    return mysql_uquery($sql);
+  }
+
+  public function del_recipe_byproduct( $recipe_id = null ) {
+    $where = '';
+    if( ! is_null( $recipe_id )) $where .= '
+AND `recipe_id` = '.mysql_ureal_escape_string($recipe_id);
+    $sql = 'DELETE FROM `recipe_byproduct`
+    WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+
+    return mysql_uquery($sql);
+  }
+
+
+
+  public function get_recipe_consumable_list($recipe_id = null) {
+    $where = '';
+    if( ! is_null( $recipe_id )) $where .= '
+AND `recipe_id` = '.mysql_ureal_escape_string($recipe_id);
+
+    $sql = '
+SELECT `recipe_id`, `item_template_id`, `quantity`
+FROM `recipe_consumable`
+WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+    $res = mysql_uquery($sql);
+
+    return mysql_fetch_to_array($res);
+  }
+
+  public function set_recipe_consumable( $recipe_id, $quantity ) {
+    $sql = "REPLACE INTO `recipe_consumable` ( `recipe_id`, `item_template_id`, `quantity` ) VALUES (".mysql_ureal_escape_string( $recipe_id, $this->get_id(), $quantity ).")";
+
+    return mysql_uquery($sql);
+  }
+
+  public function del_recipe_consumable( $recipe_id = null ) {
+    $where = '';
+    if( ! is_null( $recipe_id )) $where .= '
+AND `recipe_id` = '.mysql_ureal_escape_string($recipe_id);
+    $sql = 'DELETE FROM `recipe_consumable`
+    WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+
+    return mysql_uquery($sql);
+  }
+
+
+
+  public function get_recipe_tool_list($recipe_id = null) {
+    $where = '';
+    if( ! is_null( $recipe_id )) $where .= '
+AND `recipe_id` = '.mysql_ureal_escape_string($recipe_id);
+
+    $sql = '
+SELECT `recipe_id`, `item_template_id`
+FROM `recipe_tool`
+WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+    $res = mysql_uquery($sql);
+
+    return mysql_fetch_to_array($res);
+  }
+
+  public function set_recipe_tool( $recipe_id ) {
+    $sql = "REPLACE INTO `recipe_tool` ( `recipe_id`, `item_template_id` ) VALUES (".mysql_ureal_escape_string( $recipe_id, $this->get_id() ).")";
+
+    return mysql_uquery($sql);
+  }
+
+  public function del_recipe_tool( $recipe_id = null ) {
+    $where = '';
+    if( ! is_null( $recipe_id )) $where .= '
+AND `recipe_id` = '.mysql_ureal_escape_string($recipe_id);
+    $sql = 'DELETE FROM `recipe_tool`
+    WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+
+    return mysql_uquery($sql);
+  }
+
+
 
 
 

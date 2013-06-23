@@ -33,8 +33,10 @@
           <td><input type="checkbox" name="item_template_id[]" value="'.$item_template->id.'"/></td>
           <td><a href="'.htmlentities_utf8(Page::get_url('admin_item_template_view', array('id' => $item_template->id))).'">'.$item_template->get_name().'</a></td>
 
-          <td>'.(is_array($item_template->tech)?nl2br(parameters_to_string($item_template->tech)):$item_template->tech).'</td>
-          <td>'.(is_array($item_template->type_id)?nl2br(parameters_to_string($item_template->type_id)):$item_template->type_id).'</td>
+          <td>'.(is_array($item_template->tech)?nl2br(parameters_to_string($item_template->tech)):$item_template->tech).'</td>';
+      $item_type_temp = Item_Type::instance( $item_template->type_id);
+      echo '
+          <td>'.$item_type_temp->name.'</td>
           <td><a href="'.htmlentities_utf8(Page::get_url('admin_item_template_mod', array('id' => $item_template->id))).'"><img src="'.IMG.'img_html/pencil.png" alt="Modifier" title="Modifier"/></a></td>
         </tr>';
     }

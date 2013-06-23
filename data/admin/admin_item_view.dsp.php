@@ -21,10 +21,17 @@
         <span class="value"><a href="<?php echo get_page_url('admin_item_template_view', true, array('id' => $item->item_template_id ) )?>"><?php echo $option_list[ $item->item_template_id ]?></a></span>
       </p>
 
-            <p class="field">
-              <span class="libelle">Owner Id</span>
-              <span class="value"><?php echo is_array($item->owner_id)?nl2br(parameters_to_string( $item->owner_id )):$item->owner_id?></span>
-            </p>
+<?php
+      $option_list = array();
+      $player_list = Player::db_get_all();
+      foreach( $player_list as $player)
+        $option_list[ $player->id ] = $player->name;
+?>
+      <p class="field">
+        <span class="libelle">Owner Id</span>
+        <span class="value"><a href="<?php echo get_page_url('admin_player_view', true, array('id' => $item->owner_id ) )?>"><?php echo $option_list[ $item->owner_id ]?></a></span>
+      </p>
+
             <p class="field">
               <span class="libelle">Quality</span>
               <span class="value"><?php echo is_array($item->quality)?nl2br(parameters_to_string( $item->quality )):$item->quality?></span>
