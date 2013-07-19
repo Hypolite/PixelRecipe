@@ -12,9 +12,9 @@
 
 <?php
       $option_list = array();
-      $conversation_list = Conversation::db_get_all();
-      foreach( $conversation_list as $conversation)
-        $option_list[ $conversation->id ] = $conversation->name;
+      $sub_conversation_list = Conversation::db_get_all();
+      foreach( $sub_conversation_list as $sub_conversation)
+        $option_list[ $sub_conversation->id ] = $sub_conversation->name;
 ?>
       <p class="field">
         <span class="libelle">Conversation Id</span>
@@ -23,9 +23,9 @@
 
 <?php
       $option_list = array(null => 'Pas de choix');
-      $player_list = Player::db_get_all();
-      foreach( $player_list as $player)
-        $option_list[ $player->id ] = $player->name;
+      $sub_player_list = Player::db_get_all();
+      foreach( $sub_player_list as $sub_player)
+        $option_list[ $sub_player->id ] = $sub_player->name;
 ?>
       <p class="field">
         <span class="libelle">Player Id</span>
@@ -48,10 +48,10 @@
 
   if(count($message_recipient_list)) {
 ?>
-    <table>
+    <table class="table table-bordered table-condensed table-striped table-striped">
       <thead>
         <tr>
-          <th>Player Id</th>
+          <th>Player</th>
           <th>Read</th>          <th>Action</th>
         </tr>
       </thead>
@@ -95,7 +95,7 @@
         </p>
         <p class="field">
           <?php echo HTMLHelper::genererInputText('read', null, array(), 'Read' )?>
-          <span><?php echo guess_time(time(), GUESS_TIME_MYSQL)?></span> 
+          <span><?php echo guess_time(time(), GUESS_TIME_MYSQL)?></span>
         </p>
         <p><?php echo HTMLHelper::genererButton('action',  'set_message_recipient', array('type' => 'submit'), 'Ajouter un élément')?></p>
       </fieldset>

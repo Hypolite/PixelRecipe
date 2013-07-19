@@ -16,9 +16,9 @@ foreach( $table_columns as $column_name => $column_props ) {
       echo '
 <_?php
       $option_list = array('.($column_props['Null'] != 'NO'?'null => \'Pas de choix\'':'').');
-      $'.$foreign_table.'_list = '.to_camel_case($foreign_table, true).'::db_get_all();
-      foreach( $'.$foreign_table.'_list as $'.$foreign_table.')
-        $option_list[ $'.$foreign_table.'->id ] = $'.$foreign_table.'->name;
+      $sub_'.$foreign_table.'_list = '.to_camel_case($foreign_table, true).'::db_get_all();
+      foreach( $sub_'.$foreign_table.'_list as $sub_'.$foreign_table.')
+        $option_list[ $sub_'.$foreign_table.'->id ] = $sub_'.$foreign_table.'->name;
 ?>';
 ?>
 
@@ -73,7 +73,7 @@ foreach( $table_columns as $column_name => $column_props ) {
     $th_list = '';
     foreach( $sub_table_columns_clean as $field_name => $field ) {
       $th_list .= '
-          <th>'.$table_columns_list[$sub_table][$field_name]['Comment'].'</th>';
+          <th>'.preg_replace('/ Id$/', '', $table_columns_list[$sub_table][$field_name]['Comment']).'</th>';
     }
 
 ?>
@@ -84,7 +84,7 @@ foreach( $table_columns as $column_name => $column_props ) {
 
   if(count($<?php echo $sub_table?>_list)) {
 ?>
-    <table>
+    <table class="table table-bordered table-condensed table-striped table-striped">
       <thead>
         <tr><?php echo $th_list?>
           <th>Action</th>
@@ -158,7 +158,7 @@ foreach( $table_columns as $column_name => $column_props ) {
       $form_field .= '
         <p class="field">
           <_?php echo HTMLHelper::genererInputText(\''.$field_name.'\', null, array(), \''.$table_columns_list[$sub_table][$field_name]['Comment'].($field['Null'] == 'NO'?'*':'').'\' )?>
-          '.(in_array( $field['SimpleType'], array('date', 'datetime', 'timestamp'))?'<span><_?php echo guess_time(time(), GUESS_TIME_MYSQL)?></span>':'').' 
+          '.(in_array( $field['SimpleType'], array('date', 'datetime', 'timestamp'))?'<span><_?php echo guess_time(time(), GUESS_TIME_MYSQL)?></span>':'').'
         </p>';
     }
   }

@@ -54,7 +54,7 @@ WHERE `translator_id` = ".mysql_ureal_escape_string($translator_id);
 
   public static function db_get_select_list( $with_null = false ) {
     $return = array();
-    
+
     if( $with_null ) {
         $return[ null ] = 'N/A';
     }

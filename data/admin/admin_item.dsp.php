@@ -20,7 +20,10 @@
           <th>Item Template Id</th>
           <th>Owner Id</th>
           <th>Quality</th>
-          <th>Created</th>        </tr>
+          <th>Clock</th>
+          <th>Obsolete</th>
+          <th>Created</th>
+          <th>Destroyed</th>        </tr>
       </thead>
       <tfoot>
         <tr>
@@ -42,8 +45,11 @@
       echo '
           <td>'.$player_temp->name.'</td>
           <td>'.(is_array($item->quality)?nl2br(parameters_to_string($item->quality)):$item->quality).'</td>
+          <td>'.(is_array($item->clock)?nl2br(parameters_to_string($item->clock)):$item->clock).'</td>
+          <td>'.(is_array($item->obsolete)?nl2br(parameters_to_string($item->obsolete)):$item->obsolete).'</td>
           <td>'.guess_time($item->created, GUESS_DATETIME_LOCALE).'</td>
-          <td><a href="'.htmlentities_utf8(Page::get_url('admin_item_mod', array('id' => $item->id))).'"><img src="'.IMG.'img_html/pencil.png" alt="Modifier" title="Modifier"/></a></td>
+          <td>'.guess_time($item->destroyed, GUESS_DATETIME_LOCALE).'</td>
+          <td><a href="'.htmlentities_utf8(Page::get_url('admin_item_mod', array('id' => $item->id))).'"><i class="icon-pencil" title="Modifier"></i></a></td>
         </tr>';
     }
     echo '

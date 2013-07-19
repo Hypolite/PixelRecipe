@@ -18,10 +18,10 @@
 
   if(count($player_skill_list)) {
 ?>
-    <table>
+    <table class="table table-bordered table-condensed table-striped table-striped">
       <thead>
         <tr>
-          <th>Player Id</th>
+          <th>Player</th>
           <th>Experience</th>          <th>Action</th>
         </tr>
       </thead>
@@ -65,7 +65,7 @@
         </p>
         <p class="field">
           <?php echo HTMLHelper::genererInputText('experience', null, array(), 'Experience*' )?>
-           
+          
         </p>
         <p><?php echo HTMLHelper::genererButton('action',  'set_player_skill', array('type' => 'submit'), 'Ajouter un élément')?></p>
       </fieldset>

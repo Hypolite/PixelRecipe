@@ -12,9 +12,9 @@
 
 <?php
       $option_list = array();
-      $player_list = Player::db_get_all();
-      foreach( $player_list as $player)
-        $option_list[ $player->id ] = $player->name;
+      $sub_player_list = Player::db_get_all();
+      foreach( $sub_player_list as $sub_player)
+        $option_list[ $sub_player->id ] = $sub_player->name;
 ?>
       <p class="field">
         <span class="libelle">Player Id</span>
@@ -41,10 +41,10 @@
 
   if(count($conversation_player_list)) {
 ?>
-    <table>
+    <table class="table table-bordered table-condensed table-striped table-striped">
       <thead>
         <tr>
-          <th>Player Id</th>
+          <th>Player</th>
           <th>Archived</th>
           <th>Left</th>          <th>Action</th>
         </tr>
@@ -90,11 +90,11 @@
         </p>
         <p class="field">
           <?php echo HTMLHelper::genererInputText('archived', null, array(), 'Archived' )?>
-          <span><?php echo guess_time(time(), GUESS_TIME_MYSQL)?></span> 
+          <span><?php echo guess_time(time(), GUESS_TIME_MYSQL)?></span>
         </p>
         <p class="field">
           <?php echo HTMLHelper::genererInputText('left', null, array(), 'Left' )?>
-          <span><?php echo guess_time(time(), GUESS_TIME_MYSQL)?></span> 
+          <span><?php echo guess_time(time(), GUESS_TIME_MYSQL)?></span>
         </p>
         <p><?php echo HTMLHelper::genererButton('action',  'set_conversation_player', array('type' => 'submit'), 'Ajouter un élément')?></p>
       </fieldset>

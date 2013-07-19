@@ -31,7 +31,7 @@
           <td><input type="checkbox" name="item_type_id[]" value="'.$item_type->id.'"/></td>
           <td><a href="'.htmlentities_utf8(Page::get_url('admin_item_type_view', array('id' => $item_type->id))).'">'.$item_type->get_name().'</a></td>
 
-          <td><a href="'.htmlentities_utf8(Page::get_url('admin_item_type_mod', array('id' => $item_type->id))).'"><img src="'.IMG.'img_html/pencil.png" alt="Modifier" title="Modifier"/></a></td>
+          <td><a href="'.htmlentities_utf8(Page::get_url('admin_item_type_mod', array('id' => $item_type->id))).'"><i class="icon-pencil" title="Modifier"></i></a></td>
         </tr>';
     }
     echo '

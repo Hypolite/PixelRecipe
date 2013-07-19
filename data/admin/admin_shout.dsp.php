@@ -39,7 +39,7 @@
       echo '
           <td>'.$player_temp->name.'</td>
           <td>'.(is_array($shout->text)?nl2br(parameters_to_string($shout->text)):$shout->text).'</td>
-          <td><a href="'.htmlentities_utf8(Page::get_url('admin_shout_mod', array('id' => $shout->id))).'"><img src="'.IMG.'img_html/pencil.png" alt="Modifier" title="Modifier"/></a></td>
+          <td><a href="'.htmlentities_utf8(Page::get_url('admin_shout_mod', array('id' => $shout->id))).'"><i class="icon-pencil" title="Modifier"></i></a></td>
         </tr>';
     }
     echo '

@@ -19,7 +19,7 @@
 foreach( $table_columns as $column_name => $column_props ) {
   if( $column_name != $name_field && $column_name != "id" )
     echo '
-          <th>'.$column_props['Comment'].'</th>';
+          <th>'.preg_replace('/ Id$/', '', $column_props['Comment']).'</th>';
 } ?>
         </tr>
       </thead>
@@ -64,7 +64,7 @@ foreach( $table_columns as $column_name => $column_props ) {
     }
 } ?>
 
-          <td><a href="'.htmlentities_utf8(Page::get_url('admin_<?php echo $class_db_identifier?>_mod', array('id' => $<?php echo $class_db_identifier?>->id))).'"><img src="'.IMG.'img_html/pencil.png" alt="Modifier" title="Modifier"/></a></td>
+          <td><a href="'.htmlentities_utf8(Page::get_url('admin_<?php echo $class_db_identifier?>_mod', array('id' => $<?php echo $class_db_identifier?>->id))).'"><i class="icon-pencil" title="Modifier"></i></a></td>
         </tr>';
     }
     echo '

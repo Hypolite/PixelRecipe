@@ -78,7 +78,7 @@ WHERE `skill_id` = ".mysql_ureal_escape_string($skill_id);
 
       $return .= '
       <p class="field">'.HTMLHelper::genererSelect('item_template_id', $option_list, $this->get_item_template_id(), array(), "Item Template Id *").'<a href="'.get_page_url('admin_item_template_mod').'">Créer un objet Item Template</a></p>';
-      $option_list = array(null => 'Pas de choix');
+      $option_list = array("null" => 'Pas de choix');
       $skill_list = Skill::db_get_all();
       foreach( $skill_list as $skill)
         $option_list[ $skill->id ] = $skill->name;
@@ -103,7 +103,7 @@ WHERE `skill_id` = ".mysql_ureal_escape_string($skill_id);
  * @return string
  */
   public static function get_message_erreur($num_error) {
-    switch($num_error) {
+    switch($num_error) { 
       case 1 : $return = "Le champ <strong>Name</strong> est obligatoire."; break;
       case 2 : $return = "Le champ <strong>Item Template Id</strong> est obligatoire."; break;
       case 3 : $return = "Le champ <strong>Time</strong> est obligatoire."; break;
@@ -133,6 +133,38 @@ WHERE `skill_id` = ".mysql_ureal_escape_string($skill_id);
     if(count($return) == 0) $return = true;
     return $return;
   }
+
+  public function get_recipe_ability_list($ability_id = null) {
+    $where = '';
+    if( ! is_null( $ability_id )) $where .= '
+AND `ability_id` = '.mysql_ureal_escape_string($ability_id);
+
+    $sql = '
+SELECT `recipe_id`, `ability_id`, `points_needed`
+FROM `recipe_ability`
+WHERE `recipe_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+    $res = mysql_uquery($sql);
+
+    return mysql_fetch_to_array($res);
+  }
+
+  public function set_recipe_ability( $ability_id, $points_needed ) {
+    $sql = "REPLACE INTO `recipe_ability` ( `recipe_id`, `ability_id`, `points_needed` ) VALUES (".mysql_ureal_escape_string( $this->get_id(), $ability_id, $points_needed ).")";
+
+    return mysql_uquery($sql);
+  }
+
+  public function del_recipe_ability( $ability_id = null ) {
+    $where = '';
+    if( ! is_null( $ability_id )) $where .= '
+AND `ability_id` = '.mysql_ureal_escape_string($ability_id);
+    $sql = 'DELETE FROM `recipe_ability`
+    WHERE `recipe_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+
+    return mysql_uquery($sql);
+  }
+
+
 
   public function get_recipe_byproduct_list($item_template_id = null) {
     $where = '';
@@ -191,38 +223,6 @@ WHERE `recipe_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
     if( ! is_null( $item_template_id )) $where .= '
 AND `item_template_id` = '.mysql_ureal_escape_string($item_template_id);
     $sql = 'DELETE FROM `recipe_consumable`
-    WHERE `recipe_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
-
-    return mysql_uquery($sql);
-  }
-
-
-
-  public function get_recipe_tool_list($item_template_id = null) {
-    $where = '';
-    if( ! is_null( $item_template_id )) $where .= '
-AND `item_template_id` = '.mysql_ureal_escape_string($item_template_id);
-
-    $sql = '
-SELECT `recipe_id`, `item_template_id`
-FROM `recipe_tool`
-WHERE `recipe_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
-    $res = mysql_uquery($sql);
-
-    return mysql_fetch_to_array($res);
-  }
-
-  public function set_recipe_tool( $item_template_id ) {
-    $sql = "REPLACE INTO `recipe_tool` ( `recipe_id`, `item_template_id` ) VALUES (".mysql_ureal_escape_string( $this->get_id(), $item_template_id ).")";
-
-    return mysql_uquery($sql);
-  }
-
-  public function del_recipe_tool( $item_template_id = null ) {
-    $where = '';
-    if( ! is_null( $item_template_id )) $where .= '
-AND `item_template_id` = '.mysql_ureal_escape_string($item_template_id);
-    $sql = 'DELETE FROM `recipe_tool`
     WHERE `recipe_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
 
     return mysql_uquery($sql);

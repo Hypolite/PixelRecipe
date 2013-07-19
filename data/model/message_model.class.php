@@ -52,7 +52,7 @@ WHERE `player_id` = ".mysql_ureal_escape_string($player_id);
 
   public static function db_get_select_list( $with_null = false ) {
     $return = array();
-    
+
     if( $with_null ) {
         $return[ null ] = 'N/A';
     }
@@ -82,7 +82,7 @@ WHERE `player_id` = ".mysql_ureal_escape_string($player_id);
 
       $return .= '
       <p class="field">'.HTMLHelper::genererSelect('conversation_id', $option_list, $this->get_conversation_id(), array(), "Conversation Id *").'<a href="'.get_page_url('admin_conversation_mod').'">Créer un objet Conversation</a></p>';
-      $option_list = array(null => 'Pas de choix');
+      $option_list = array("null" => 'Pas de choix');
       $player_list = Player::db_get_all();
       foreach( $player_list as $player)
         $option_list[ $player->id ] = $player->name;

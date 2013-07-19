@@ -10,7 +10,10 @@ class Item_Model extends DBObject {
   protected $_item_template_id = null;
   protected $_owner_id = null;
   protected $_quality = null;
+  protected $_clock = null;
+  protected $_obsolete = null;
   protected $_created = null;
+  protected $_destroyed = null;
 
   public function __construct($id = null) {
     parent::__construct($id);
@@ -20,12 +23,20 @@ class Item_Model extends DBObject {
   public static function get_table_name() { return "item"; }
 
   public function get_created()    { return guess_time($this->_created);}
+  public function get_destroyed()    { return guess_time($this->_destroyed);}
 
   /* MUTATEURS */
   public function set_owner_id($owner_id) {
     if( is_numeric($owner_id) && (int)$owner_id == $owner_id) $data = intval($owner_id); else $data = null; $this->_owner_id = $data;
   }
+  public function set_clock($clock) {
+    if( is_numeric($clock) && (int)$clock == $clock) $data = intval($clock); else $data = null; $this->_clock = $data;
+  }
+  public function set_obsolete($obsolete) {
+    if( is_numeric($obsolete) && (int)$obsolete == $obsolete) $data = intval($obsolete); else $data = null; $this->_obsolete = $data;
+  }
   public function set_created($date) { $this->_created = guess_time($date, GUESS_DATE_MYSQL);}
+  public function set_destroyed($date) { $this->_destroyed = guess_time($date, GUESS_DATE_MYSQL);}
 
   /* FONCTIONS SQL */
 
@@ -47,7 +58,7 @@ WHERE `owner_id` = ".mysql_ureal_escape_string($owner_id);
 
   public static function db_get_select_list( $with_null = false ) {
     $return = array();
-    
+
     if( $with_null ) {
         $return[ null ] = 'N/A';
     }
@@ -81,20 +92,32 @@ WHERE `owner_id` = ".mysql_ureal_escape_string($owner_id);
 
       $return .= '
       <p class="field">'.HTMLHelper::genererSelect('item_template_id', $option_list, $this->get_item_template_id(), array(), "Item Template Id *").'<a href="'.get_page_url('admin_item_template_mod').'">Créer un objet Item Template</a></p>';
-      $option_list = array();
+      $option_list = array("null" => 'Pas de choix');
       $player_list = Player::db_get_all();
       foreach( $player_list as $player)
         $option_list[ $player->id ] = $player->name;
 
       $return .= '
-      <p class="field">'.HTMLHelper::genererSelect('owner_id', $option_list, $this->get_owner_id(), array(), "Owner Id *").'<a href="'.get_page_url('admin_player_mod').'">Créer un objet Player</a></p>
+      <p class="field">'.HTMLHelper::genererSelect('owner_id', $option_list, $this->get_owner_id(), array(), "Owner Id").'<a href="'.get_page_url('admin_player_mod').'">Créer un objet Player</a></p>
         <p class="field">'.(is_array($this->get_quality())?
           HTMLHelper::genererTextArea( "quality", parameters_to_string( $this->get_quality() ), array(), "Quality" ):
           HTMLHelper::genererInputText( "quality", $this->get_quality(), array(), "Quality")).'
         </p>
+        <p class="field">'.(is_array($this->get_clock())?
+          HTMLHelper::genererTextArea( "clock", parameters_to_string( $this->get_clock() ), array(), "Clock *" ):
+          HTMLHelper::genererInputText( "clock", $this->get_clock(), array(), "Clock *")).'
+        </p>
+        <p class="field">'.(is_array($this->get_obsolete())?
+          HTMLHelper::genererTextArea( "obsolete", parameters_to_string( $this->get_obsolete() ), array(), "Obsolete" ):
+          HTMLHelper::genererInputText( "obsolete", $this->get_obsolete(), array(), "Obsolete")).'
+        </p>
         <p class="field">'.(is_array($this->get_created())?
           HTMLHelper::genererTextArea( "created", parameters_to_string( $this->get_created() ), array(), "Created *" ):
           HTMLHelper::genererInputText( "created", $this->get_created(), array(), "Created *")).'
+        </p>
+        <p class="field">'.(is_array($this->get_destroyed())?
+          HTMLHelper::genererTextArea( "destroyed", parameters_to_string( $this->get_destroyed() ), array(), "Destroyed" ):
+          HTMLHelper::genererInputText( "destroyed", $this->get_destroyed(), array(), "Destroyed")).'
         </p>
 
     </fieldset>';
@@ -113,7 +136,7 @@ WHERE `owner_id` = ".mysql_ureal_escape_string($owner_id);
     switch($num_error) { 
       case 1 : $return = "Le champ <strong>Name</strong> est obligatoire."; break;
       case 2 : $return = "Le champ <strong>Item Template Id</strong> est obligatoire."; break;
-      case 3 : $return = "Le champ <strong>Owner Id</strong> est obligatoire."; break;
+      case 3 : $return = "Le champ <strong>Clock</strong> est obligatoire."; break;
       case 4 : $return = "Le champ <strong>Created</strong> est obligatoire."; break;
       default: $return = "Erreur de saisie, veuillez vérifier les champs.";
     }
@@ -132,7 +155,7 @@ WHERE `owner_id` = ".mysql_ureal_escape_string($owner_id);
 
     $return[] = Member::check_compulsory($this->get_name(), 1);
     $return[] = Member::check_compulsory($this->get_item_template_id(), 2);
-    $return[] = Member::check_compulsory($this->get_owner_id(), 3, true);
+    $return[] = Member::check_compulsory($this->get_clock(), 3, true);
     $return[] = Member::check_compulsory($this->get_created(), 4);
 
     $return = array_unique($return);

@@ -3,7 +3,25 @@
 
   if(!is_null(getValue('action'))) {
     switch( getValue('action') ) {
-       case 'set_recipe_byproduct':
+       case 'set_recipe_ability':
+        if( $recipe->id ) {
+          $flag_set_recipe_ability = $recipe->set_recipe_ability(
+            ($value = getValue('ability_id')) == ''?null:$value,
+            ($value = getValue('points_needed')) == ''?null:$value
+          );
+          if( ! $flag_set_recipe_ability ) {
+            Page::add_message( '$recipe->set_recipe_ability : ' . mysql_error(), Page::PAGE_MESSAGE_ERROR );
+          }
+        }
+        break;
+      case 'del_recipe_ability':
+        if( $recipe->id ) {
+          $flag_del_recipe_ability = $recipe->del_recipe_ability(
+            ($value = getValue('ability_id')) == ''?null:$value
+          );
+        }
+        break;
+      case 'set_recipe_byproduct':
         if( $recipe->id ) {
           $flag_set_recipe_byproduct = $recipe->set_recipe_byproduct(
             ($value = getValue('item_template_id')) == ''?null:$value,
@@ -39,28 +57,11 @@
           );
         }
         break;
-      case 'set_recipe_tool':
-        if( $recipe->id ) {
-          $flag_set_recipe_tool = $recipe->set_recipe_tool(
-            ($value = getValue('item_template_id')) == ''?null:$value
-          );
-          if( ! $flag_set_recipe_tool ) {
-            Page::add_message( '$recipe->set_recipe_tool : ' . mysql_error(), Page::PAGE_MESSAGE_ERROR );
-          }
-        }
-        break;
-      case 'del_recipe_tool':
-        if( $recipe->id ) {
-          $flag_del_recipe_tool = $recipe->del_recipe_tool(
-            ($value = getValue('item_template_id')) == ''?null:$value
-          );
-        }
-        break;
       default:
         break;
     }
   }
-  
+
   // CUSTOM
 
   //Custom content

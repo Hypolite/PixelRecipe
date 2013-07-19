@@ -96,7 +96,7 @@ WHERE `'.$column_name.'` = ".mysql_ureal_escape_string($'.$column_name.');
 
   public static function db_get_select_list( $with_null = false ) {
     $return = array();
-    
+
     if( $with_null ) {
         $return[ null ] = 'N/A';
     }
@@ -122,7 +122,7 @@ foreach( $table_columns as $column_name => $column_props ) {
   if( array_key_exists( $column_name, $foreign_keys) ) {
     $foreign_table = $foreign_keys[$column_name];
     echo '\';
-      $option_list = array('.($column_props['Null'] != 'NO'?'null => \'Pas de choix\'':'').');
+      $option_list = array('.($column_props['Null'] != 'NO'?'"null" => \'Pas de choix\'':'').');
       $'.$foreign_table.'_list = '.to_camel_case($foreign_table, true).'::db_get_all();
       foreach( $'.$foreign_table.'_list as $'.$foreign_table.')
         $option_list[ $'.$foreign_table.'->id ] = $'.$foreign_table.'->name;

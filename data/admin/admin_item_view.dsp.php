@@ -12,9 +12,9 @@
 
 <?php
       $option_list = array();
-      $item_template_list = Item_Template::db_get_all();
-      foreach( $item_template_list as $item_template)
-        $option_list[ $item_template->id ] = $item_template->name;
+      $sub_item_template_list = Item_Template::db_get_all();
+      foreach( $sub_item_template_list as $sub_item_template)
+        $option_list[ $sub_item_template->id ] = $sub_item_template->name;
 ?>
       <p class="field">
         <span class="libelle">Item Template Id</span>
@@ -22,10 +22,10 @@
       </p>
 
 <?php
-      $option_list = array();
-      $player_list = Player::db_get_all();
-      foreach( $player_list as $player)
-        $option_list[ $player->id ] = $player->name;
+      $option_list = array(null => 'Pas de choix');
+      $sub_player_list = Player::db_get_all();
+      foreach( $sub_player_list as $sub_player)
+        $option_list[ $sub_player->id ] = $sub_player->name;
 ?>
       <p class="field">
         <span class="libelle">Owner Id</span>
@@ -37,8 +37,20 @@
               <span class="value"><?php echo is_array($item->quality)?nl2br(parameters_to_string( $item->quality )):$item->quality?></span>
             </p>
             <p class="field">
+              <span class="libelle">Clock</span>
+              <span class="value"><?php echo is_array($item->clock)?nl2br(parameters_to_string( $item->clock )):$item->clock?></span>
+            </p>
+            <p class="field">
+              <span class="libelle">Obsolete</span>
+              <span class="value"><?php echo is_array($item->obsolete)?nl2br(parameters_to_string( $item->obsolete )):$item->obsolete?></span>
+            </p>
+            <p class="field">
               <span class="libelle">Created</span>
               <span class="value"><?php echo guess_time($item->created, GUESS_DATETIME_LOCALE)?></span>
+            </p>
+            <p class="field">
+              <span class="libelle">Destroyed</span>
+              <span class="value"><?php echo guess_time($item->destroyed, GUESS_DATETIME_LOCALE)?></span>
             </p>    </div>
     <p><a href="<?php echo get_page_url('admin_item_mod', true, array('id' => $item->id))?>">Modifier cet objet Item</a></p>
 <?php

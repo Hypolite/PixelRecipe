@@ -16,9 +16,9 @@
             </p>
 <?php
       $option_list = array();
-      $player_list = Player::db_get_all();
-      foreach( $player_list as $player)
-        $option_list[ $player->id ] = $player->name;
+      $sub_player_list = Player::db_get_all();
+      foreach( $sub_player_list as $sub_player)
+        $option_list[ $sub_player->id ] = $sub_player->name;
 ?>
       <p class="field">
         <span class="libelle">Shouter Id</span>

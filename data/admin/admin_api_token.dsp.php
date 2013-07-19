@@ -41,7 +41,7 @@
           <td>'.$player_temp->name.'</td>
           <td>'.guess_time($api_token->created, GUESS_DATETIME_LOCALE).'</td>
           <td>'.guess_time($api_token->expires, GUESS_DATETIME_LOCALE).'</td>
-          <td><a href="'.htmlentities_utf8(Page::get_url('admin_api_token_mod', array('id' => $api_token->id))).'"><img src="'.IMG.'img_html/pencil.png" alt="Modifier" title="Modifier"/></a></td>
+          <td><a href="'.htmlentities_utf8(Page::get_url('admin_api_token_mod', array('id' => $api_token->id))).'"><i class="icon-pencil" title="Modifier"></i></a></td>
         </tr>';
     }
     echo '

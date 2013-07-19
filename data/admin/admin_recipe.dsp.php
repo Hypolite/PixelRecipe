@@ -41,7 +41,7 @@
       echo '
           <td>'.$skill_temp->name.'</td>
           <td>'.(is_array($recipe->time)?nl2br(parameters_to_string($recipe->time)):$recipe->time).'</td>
-          <td><a href="'.htmlentities_utf8(Page::get_url('admin_recipe_mod', array('id' => $recipe->id))).'"><img src="'.IMG.'img_html/pencil.png" alt="Modifier" title="Modifier"/></a></td>
+          <td><a href="'.htmlentities_utf8(Page::get_url('admin_recipe_mod', array('id' => $recipe->id))).'"><i class="icon-pencil" title="Modifier"></i></a></td>
         </tr>';
     }
     echo '

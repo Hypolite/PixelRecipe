@@ -31,7 +31,7 @@
           <td><input type="checkbox" name="skill_id[]" value="'.$skill->id.'"/></td>
           <td><a href="'.htmlentities_utf8(Page::get_url('admin_skill_view', array('id' => $skill->id))).'">'.$skill->get_name().'</a></td>
 
-          <td><a href="'.htmlentities_utf8(Page::get_url('admin_skill_mod', array('id' => $skill->id))).'"><img src="'.IMG.'img_html/pencil.png" alt="Modifier" title="Modifier"/></a></td>
+          <td><a href="'.htmlentities_utf8(Page::get_url('admin_skill_mod', array('id' => $skill->id))).'"><i class="icon-pencil" title="Modifier"></i></a></td>
         </tr>';
     }
     echo '

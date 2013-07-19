@@ -18,7 +18,9 @@
           <th>Sel.</th>
           <th>Name</th>
           <th>Tech</th>
-          <th>Type Id</th>        </tr>
+          <th>Type Id</th>
+          <th>Obsolete</th>
+          <th>Next Item Template Id</th>        </tr>
       </thead>
       <tfoot>
         <tr>
@@ -37,7 +39,11 @@
       $item_type_temp = Item_Type::instance( $item_template->type_id);
       echo '
           <td>'.$item_type_temp->name.'</td>
-          <td><a href="'.htmlentities_utf8(Page::get_url('admin_item_template_mod', array('id' => $item_template->id))).'"><img src="'.IMG.'img_html/pencil.png" alt="Modifier" title="Modifier"/></a></td>
+          <td>'.(is_array($item_template->obsolete)?nl2br(parameters_to_string($item_template->obsolete)):$item_template->obsolete).'</td>';
+      $item_template_temp = Item_Template::instance( $item_template->next_item_template_id);
+      echo '
+          <td>'.$item_template_temp->name.'</td>
+          <td><a href="'.htmlentities_utf8(Page::get_url('admin_item_template_mod', array('id' => $item_template->id))).'"><i class="icon-pencil" title="Modifier"></i></a></td>
         </tr>';
     }
     echo '

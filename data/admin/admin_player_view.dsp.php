@@ -12,9 +12,9 @@
 
 <?php
       $option_list = array();
-      $member_list = Member::db_get_all();
-      foreach( $member_list as $member)
-        $option_list[ $member->id ] = $member->name;
+      $sub_member_list = Member::db_get_all();
+      foreach( $sub_member_list as $sub_member)
+        $option_list[ $sub_member->id ] = $sub_member->name;
 ?>
       <p class="field">
         <span class="libelle">Member Id</span>
@@ -41,10 +41,10 @@
 
   if(count($message_recipient_list)) {
 ?>
-    <table>
+    <table class="table table-bordered table-condensed table-striped table-striped">
       <thead>
         <tr>
-          <th>Message Id</th>
+          <th>Message</th>
           <th>Read</th>          <th>Action</th>
         </tr>
       </thead>
@@ -88,7 +88,7 @@
         </p>
         <p class="field">
           <?php echo HTMLHelper::genererInputText('read', null, array(), 'Read' )?>
-          <span><?php echo guess_time(time(), GUESS_TIME_MYSQL)?></span> 
+          <span><?php echo guess_time(time(), GUESS_TIME_MYSQL)?></span>
         </p>
         <p><?php echo HTMLHelper::genererButton('action',  'set_message_recipient', array('type' => 'submit'), 'Ajouter un élément')?></p>
       </fieldset>
@@ -100,10 +100,10 @@
 
   if(count($player_skill_list)) {
 ?>
-    <table>
+    <table class="table table-bordered table-condensed table-striped table-striped">
       <thead>
         <tr>
-          <th>Skill Id</th>
+          <th>Skill</th>
           <th>Experience</th>          <th>Action</th>
         </tr>
       </thead>
@@ -147,7 +147,7 @@
         </p>
         <p class="field">
           <?php echo HTMLHelper::genererInputText('experience', null, array(), 'Experience*' )?>
-           
+          
         </p>
         <p><?php echo HTMLHelper::genererButton('action',  'set_player_skill', array('type' => 'submit'), 'Ajouter un élément')?></p>
       </fieldset>
