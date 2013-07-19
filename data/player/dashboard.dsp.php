@@ -31,9 +31,28 @@
     }
 ?>
 </div>
+<h3>Inventory</h3>
+<ul>
+<?php foreach( $current_player->get_inventory_list() as $item ):?>
+	<li><?php echo $item->name?></li>
+<?php endforeach;?>
+</ul>
 <h3>Recipes</h3>
+<h4>Gathering</h4>
 <?php
 	$gather_recipes = Recipe::get_gather_list();
-
-	var_debug( $gather_recipes );
 ?>
+<ul>
+<?php foreach( $gather_recipes as $recipe ) :?>
+	<li><a href="<?php echo Page::get_url('cook', array('recipe_id' => $recipe->id))?>"><?php echo $recipe->name?></a></li>
+<?php endforeach;?>
+</ul>
+<h4>Craft</h4>
+<?php
+	$gather_recipes = Recipe::get_available_recipe_list( $current_player );
+?>
+<ul>
+<?php foreach( $gather_recipes as $recipe ) :?>
+	<li><a href="<?php echo Page::get_url('cook', array('recipe_id' => $recipe->id))?>"><?php echo $recipe->name?></a></li>
+<?php endforeach;?>
+</ul>
