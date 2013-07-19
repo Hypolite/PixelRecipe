@@ -29,6 +29,7 @@ define('PAGE_DEFAUT', 'accueil');
 define('PAGE_LOGIN', 'login');
 define('PAGE_ERROR', 'erreur');
 
+define('LOCALES', 'en_US,fr_FR');
 
 // Vérification du nom de domaine pour détermination PROD/DEV
 function match_host($host, $match) {
