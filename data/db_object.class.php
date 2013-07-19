@@ -595,6 +595,7 @@ WHERE `id` = ".mysql_ureal_escape_string($this->get_id());
 					if( is_array( $this->$name ) && is_string( $value ) ) {
 						$value = string_to_parameters( $value );
 					}
+					if( $value === 'null' ) $value = null;
 					$this->$name = $value;
 				}
 			}
