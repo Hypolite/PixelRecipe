@@ -14,8 +14,8 @@ class Blueprint extends Blueprint_Model {
 		$sql = '
 SELECT r.*
 FROM `'.self::get_table_name().'` r
-LEFT JOIN `recipe_consumable` r_c ON r_c.`recipe_id` = r.`id`
-WHERE r_c.`recipe_id` IS NULL';
+LEFT JOIN `blueprint_consumable` r_c ON r_c.`blueprint_id` = r.`id`
+WHERE r_c.`blueprint_id` IS NULL';
 
 		return self::sql_to_list($sql);
 	}
@@ -24,8 +24,8 @@ WHERE r_c.`recipe_id` IS NULL';
 		$sql = '
 SELECT *
 FROM `item_template` i_t
-JOIN `recipe_consumable` r_c ON r_c.`item_template_id` = i_t.`id`
-WHERE r_c.`recipe_id` = '.mysql_ureal_escape_string($this->id);
+JOIN `blueprint_consumable` r_c ON r_c.`item_template_id` = i_t.`id`
+WHERE r_c.`blueprint_id` = '.mysql_ureal_escape_string($this->id);
 
 		return Item_Template::sql_to_list($sql);
 	}
@@ -34,17 +34,17 @@ WHERE r_c.`recipe_id` = '.mysql_ureal_escape_string($this->id);
 		$sql = '
 SELECT *
 FROM `item_template` i_t
-JOIN `recipe_byproduct` r_c ON r_c.`item_template_id` = i_t.`id`
-WHERE r_c.`recipe_id` = '.mysql_ureal_escape_string($this->id);
+JOIN `blueprint_byproduct` r_c ON r_c.`item_template_id` = i_t.`id`
+WHERE r_c.`blueprint_id` = '.mysql_ureal_escape_string($this->id);
 
 		return Item_Template::sql_to_list($sql);
 	}
 
-	public static function get_available_recipe_list( Player $player ) {
+	public static function get_available_blueprint_list( Player $player ) {
 		$sql = '
 SELECT r.*
-FROM `recipe` r
-JOIN `recipe_consumable` r_c ON r_c.`recipe_id` = r.`id`
+FROM `blueprint` r
+JOIN `blueprint_consumable` r_c ON r_c.`blueprint_id` = r.`id`
 JOIN (
 	SELECT `item_template_id`, COUNT(*) AS `quantity`
 	FROM `item`
@@ -54,7 +54,7 @@ JOIN (
 ) `p_i`
 ON p_i.`item_template_id` = r_c.`item_template_id` AND p_i.`quantity` >= r_c.`quantity`';
 
-		return Recipe::sql_to_list($sql);
+		return Blueprint::sql_to_list($sql);
 	}
 
 
