@@ -5,13 +5,11 @@
 
 	$blueprint = Blueprint::instance(getValue('blueprint_id'));
 
-	if( $blueprint->id ) {
-		try {
-			$current_player->craft( $blueprint );
-			Page::add_message('Blueprint "'.$blueprint->name.'" is crafted!');
-		}catch( Exception $e ) {
-			Page::add_message('Unable to craft "'.$blueprint->name.'"', Page::PAGE_MESSAGE_WARNING);
-		}
+	try {
+		$current_player->craft( $blueprint );
+		Page::add_message('Blueprint "'.$blueprint->name.'" is crafted!');
+	}catch( Exception $e ) {
+		Page::add_message('Unable to craft "'.$blueprint->name.'": '.$e->getMessage(), Page::PAGE_MESSAGE_WARNING);
 	}
 
 	Page::redirect('dashboard');

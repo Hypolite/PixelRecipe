@@ -38,7 +38,7 @@
 <h3>Inventory</h3>
 <ul>
 <?php foreach( $current_player->get_inventory_list() as $item ):?>
-	<li><?php echo $item->name?> <a href="<?php echo Page::get_url('use', array('item_id' => $item->id));?>">Use</a></li>
+	<li><?php echo $item->name?> <?php if($item->is_edible()):?><a href="<?php echo Page::get_url('eat', array('item_id' => $item->id));?>">Eat</a><?php endif;?></li>
 <?php endforeach;?>
 </ul>
 <h3>Blueprints</h3>

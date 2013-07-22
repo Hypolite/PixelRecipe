@@ -25,7 +25,7 @@ class Item extends Item_Model {
 		return $item;
 	}
 
-	function pass_time( $time ) {
+	public function pass_time( $time ) {
 		$this->clock += $time;
 
 		$this->save();
@@ -46,9 +46,23 @@ class Item extends Item_Model {
 		}
 	}
 
-	function destroy() {
+	public function destroy() {
 		$this->destroyed = guess_time(time(), GUESS_TIME_MYSQL);
 		$this->save();
+	}
+	
+	public function is_edible() {
+		/* @var $item_template Item_Template */
+		$item_template = Item_Template::instance($this->item_template_id);
+		
+		return $item_template->is_edible();
+	}
+
+	public function get_ability_points_provided( $ability_id ) {
+		/* @var $item_template Item_Template */
+		$item_template = Item_Template::instance($this->item_template_id);
+		
+		return $item_template->get_ability_points_provided( $ability_id );
 	}
 
   // /CUSTOM

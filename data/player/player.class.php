@@ -145,19 +145,15 @@ ORDER BY `clock` DESC'.$limit;
 		if( $this->current_energy >= $this->max_energy )
 			throw new Exception('You are already full.');
 		
-		/* @var $item_template Item_Template */
-		$item_template = Item_Template::instance($item->item_template_id);
-		// 8 = Feeding
-		$ability_list = $item_template->get_item_template_ability_list(8);
-		if( count( $ability_list ) == 0 )
+		if( !$item->is_edible() )
 			throw new Exception('Item '.$item->name.' is not edible.');
 		
-		$feeding_ability = array_pop($ability_list);
+		
 		
 		$player_energy_log = Player_Energy_Log::instance();
 		$player_energy_log->player_id = $this->id;
 		$player_energy_log->reason = 'Food';
-		$player_energy_log->delta = $feeding_ability['points_provided'];
+		$player_energy_log->delta = $item->get_ability_points_provided(8);
 		$player_energy_log->timestamp = time();
 		$player_energy_log->save();
 		
@@ -165,13 +161,16 @@ ORDER BY `clock` DESC'.$limit;
 	}
 
 	public function craft( Blueprint $blueprint ) {
-		mysql_uquery('BEGIN');
+		if( $blueprint->id === null )
+			throw new Exception('Non-existing blueprint.');
+		
+		$time_taken = $blueprint->time;
+			
+		if( $time_taken > $this->current_energy )
+			throw new Exception('You don\'t have enough energy to craft this item.');
 
 		try {
-			$time_taken = $blueprint->time;
-			
-			if( $time_taken > $this->current_energy )
-				throw new Exception('You don\'t have enough energy to craft this item.');
+			mysql_uquery('BEGIN');
 			
 			// Remove Consumables from player's inventory
 			$consumable_list = $blueprint->get_consumable_list();
