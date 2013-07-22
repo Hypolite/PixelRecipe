@@ -56,21 +56,11 @@ WHERE `member_id` = '.$member->id;
 		}
 		return $return;
 	}
-
-	public function can_cook( Recipe $recipe ) {
-		$return = true;
-
-		// Check consumables (type + quantity)
-
-		// Check tools
-
-		return $return;
-	}
         
 	public function get_current_energy() {
 		$sql = '
 SELECT IFNULL(SUM(`time_taken`), 0)
-FROM `player_recipe_log`
+FROM `player_blueprint_log`
 WHERE `player_id` = '.mysql_ureal_escape_string($this->id);
 		$res = mysql_uquery($sql);
 		$energy_consumed = array_pop(mysql_fetch_row($res));
@@ -174,17 +164,17 @@ ORDER BY `clock` DESC'.$limit;
 		$item->destroy();
 	}
 
-	public function cook( Recipe $recipe ) {
+	public function craft( Blueprint $blueprint ) {
 		mysql_uquery('BEGIN');
 
 		try {
-			$time_taken = $recipe->time;
+			$time_taken = $blueprint->time;
 			
 			if( $time_taken > $this->current_energy )
 				throw new Exception('You don\'t have enough energy to craft this item.');
 			
 			// Remove Consumables from player's inventory
-			$consumable_list = $recipe->get_consumable_list();
+			$consumable_list = $blueprint->get_consumable_list();
 
 			foreach( $consumable_list as $consumable ) {
 				$item_template = Item_Template::instance($consumable['item_template_id']);
@@ -192,7 +182,7 @@ ORDER BY `clock` DESC'.$limit;
 			}
 
 			// Add the Byproducts to player's inventory
-			$byproduct_list = $recipe->get_byproduct_list();
+			$byproduct_list = $blueprint->get_byproduct_list();
 
 			foreach( $byproduct_list as $byproduct ) {
 				$item_template = Item_Template::instance($byproduct['item_template_id']);
@@ -202,20 +192,20 @@ ORDER BY `clock` DESC'.$limit;
 			}
 
 			// Add the result to player's inventory
-			$result = Item_Template::instance($recipe->item_template_id);
+			$result = Item_Template::instance($blueprint->item_template_id);
 			$this->gain_item( $result );
 
 			// Make time pass for the player's inventory
 			$this->pass_time($time_taken);
 
 			// Increase according player's skill
-			//$recipe_skill = Skill::instance($recipe->skill_id);
-			//$this->increase_skill( $recipe_skill, $time_taken );
+			//$blueprint_skill = Skill::instance($blueprint->skill_id);
+			//$this->increase_skill( $blueprint_skill, $time_taken );
 
 			// Add a log entry
-			$log_entry = Player_Recipe_Log::instance();
+			$log_entry = Player_Blueprint_Log::instance();
 			$log_entry->player_id = $this->id;
-			$log_entry->recipe_id = $recipe->id;
+			$log_entry->blueprint_id = $blueprint->id;
 			$log_entry->time_taken = $time_taken;
 			$log_entry->timestamp = guess_time(time(), GUESS_DATE_MYSQL);
 			$log_entry->save();

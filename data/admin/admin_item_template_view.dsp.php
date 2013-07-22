@@ -41,6 +41,124 @@
       </p>
     </div>
     <p><a href="<?php echo get_page_url('admin_item_template_mod', true, array('id' => $item_template->id))?>">Modifier cet objet Item Template</a></p>
+    <h4>Blueprint Byproduct</h4>
+<?php
+
+  $blueprint_byproduct_list = $item_template->get_blueprint_byproduct_list();
+
+  if(count($blueprint_byproduct_list)) {
+?>
+    <table class="table table-bordered table-condensed table-striped table-striped">
+      <thead>
+        <tr>
+          <th>Blueprint</th>
+          <th>Quantity</th>          <th>Action</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <td colspan="3"><?php echo count( $blueprint_byproduct_list )?> lignes</td>
+        </tr>
+      </tfoot>
+      <tbody>
+<?php
+      foreach( $blueprint_byproduct_list as $blueprint_byproduct ) {
+
+ 
+        $blueprint_id_blueprint = Blueprint::instance( $blueprint_byproduct['blueprint_id'] );        echo '
+        <tr>
+        <td><a href="'.get_page_url('admin_blueprint_view', true, array('id' => $blueprint_id_blueprint->id)).'">'.$blueprint_id_blueprint->name.'</a></td>
+        <td>'.$blueprint_byproduct['quantity'].'</td>          <td>
+            <form action="'.get_page_url(PAGE_CODE, true, array('id' => $item_template->id)).'" method="post">
+              '.HTMLHelper::genererInputHidden('id', $item_template->id).'
+
+              '.HTMLHelper::genererInputHidden('blueprint_id', $blueprint_id_blueprint->id).'              '.HTMLHelper::genererButton('action',  'del_blueprint_byproduct', array('type' => 'submit'), 'Supprimer').'
+            </form>
+          </td>
+        </tr>';
+      }
+?>
+      </tbody>
+    </table>
+<?php
+  }else {
+    echo '<p>Il n\'y a pas d\'éléments à afficher</p>';
+  }
+
+  $liste_valeurs_blueprint = Blueprint::db_get_select_list();?>
+    <form action="<?php echo get_page_url(PAGE_CODE, true, array('id' => $item_template->id))?>" method="post" class="formulaire">
+      <?php echo HTMLHelper::genererInputHidden('id', $item_template->id )?>
+      <fieldset>
+        <legend>Ajouter un élément</legend>
+        <p class="field">
+          <?php echo HTMLHelper::genererSelect('blueprint_id', $liste_valeurs_blueprint, null, array(), 'Blueprint' )?><a href="<?php echo get_page_url('admin_blueprint_mod')?>">Créer un objet Blueprint</a>
+        </p>
+        <p class="field">
+          <?php echo HTMLHelper::genererInputText('quantity', null, array(), 'Quantity*' )?>
+          
+        </p>
+        <p><?php echo HTMLHelper::genererButton('action',  'set_blueprint_byproduct', array('type' => 'submit'), 'Ajouter un élément')?></p>
+      </fieldset>
+    </form>
+    <h4>Blueprint Consumable</h4>
+<?php
+
+  $blueprint_consumable_list = $item_template->get_blueprint_consumable_list();
+
+  if(count($blueprint_consumable_list)) {
+?>
+    <table class="table table-bordered table-condensed table-striped table-striped">
+      <thead>
+        <tr>
+          <th>Blueprint</th>
+          <th>Quantity</th>          <th>Action</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <td colspan="3"><?php echo count( $blueprint_consumable_list )?> lignes</td>
+        </tr>
+      </tfoot>
+      <tbody>
+<?php
+      foreach( $blueprint_consumable_list as $blueprint_consumable ) {
+
+ 
+        $blueprint_id_blueprint = Blueprint::instance( $blueprint_consumable['blueprint_id'] );        echo '
+        <tr>
+        <td><a href="'.get_page_url('admin_blueprint_view', true, array('id' => $blueprint_id_blueprint->id)).'">'.$blueprint_id_blueprint->name.'</a></td>
+        <td>'.$blueprint_consumable['quantity'].'</td>          <td>
+            <form action="'.get_page_url(PAGE_CODE, true, array('id' => $item_template->id)).'" method="post">
+              '.HTMLHelper::genererInputHidden('id', $item_template->id).'
+
+              '.HTMLHelper::genererInputHidden('blueprint_id', $blueprint_id_blueprint->id).'              '.HTMLHelper::genererButton('action',  'del_blueprint_consumable', array('type' => 'submit'), 'Supprimer').'
+            </form>
+          </td>
+        </tr>';
+      }
+?>
+      </tbody>
+    </table>
+<?php
+  }else {
+    echo '<p>Il n\'y a pas d\'éléments à afficher</p>';
+  }
+
+  $liste_valeurs_blueprint = Blueprint::db_get_select_list();?>
+    <form action="<?php echo get_page_url(PAGE_CODE, true, array('id' => $item_template->id))?>" method="post" class="formulaire">
+      <?php echo HTMLHelper::genererInputHidden('id', $item_template->id )?>
+      <fieldset>
+        <legend>Ajouter un élément</legend>
+        <p class="field">
+          <?php echo HTMLHelper::genererSelect('blueprint_id', $liste_valeurs_blueprint, null, array(), 'Blueprint' )?><a href="<?php echo get_page_url('admin_blueprint_mod')?>">Créer un objet Blueprint</a>
+        </p>
+        <p class="field">
+          <?php echo HTMLHelper::genererInputText('quantity', null, array(), 'Quantity*' )?>
+          
+        </p>
+        <p><?php echo HTMLHelper::genererButton('action',  'set_blueprint_consumable', array('type' => 'submit'), 'Ajouter un élément')?></p>
+      </fieldset>
+    </form>
     <h4>Item Template Ability</h4>
 <?php
 
@@ -98,124 +216,6 @@
           
         </p>
         <p><?php echo HTMLHelper::genererButton('action',  'set_item_template_ability', array('type' => 'submit'), 'Ajouter un élément')?></p>
-      </fieldset>
-    </form>
-    <h4>Recipe Byproduct</h4>
-<?php
-
-  $recipe_byproduct_list = $item_template->get_recipe_byproduct_list();
-
-  if(count($recipe_byproduct_list)) {
-?>
-    <table class="table table-bordered table-condensed table-striped table-striped">
-      <thead>
-        <tr>
-          <th>Recipe</th>
-          <th>Quantity</th>          <th>Action</th>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          <td colspan="3"><?php echo count( $recipe_byproduct_list )?> lignes</td>
-        </tr>
-      </tfoot>
-      <tbody>
-<?php
-      foreach( $recipe_byproduct_list as $recipe_byproduct ) {
-
- 
-        $recipe_id_recipe = Recipe::instance( $recipe_byproduct['recipe_id'] );        echo '
-        <tr>
-        <td><a href="'.get_page_url('admin_recipe_view', true, array('id' => $recipe_id_recipe->id)).'">'.$recipe_id_recipe->name.'</a></td>
-        <td>'.$recipe_byproduct['quantity'].'</td>          <td>
-            <form action="'.get_page_url(PAGE_CODE, true, array('id' => $item_template->id)).'" method="post">
-              '.HTMLHelper::genererInputHidden('id', $item_template->id).'
-
-              '.HTMLHelper::genererInputHidden('recipe_id', $recipe_id_recipe->id).'              '.HTMLHelper::genererButton('action',  'del_recipe_byproduct', array('type' => 'submit'), 'Supprimer').'
-            </form>
-          </td>
-        </tr>';
-      }
-?>
-      </tbody>
-    </table>
-<?php
-  }else {
-    echo '<p>Il n\'y a pas d\'éléments à afficher</p>';
-  }
-
-  $liste_valeurs_recipe = Recipe::db_get_select_list();?>
-    <form action="<?php echo get_page_url(PAGE_CODE, true, array('id' => $item_template->id))?>" method="post" class="formulaire">
-      <?php echo HTMLHelper::genererInputHidden('id', $item_template->id )?>
-      <fieldset>
-        <legend>Ajouter un élément</legend>
-        <p class="field">
-          <?php echo HTMLHelper::genererSelect('recipe_id', $liste_valeurs_recipe, null, array(), 'Recipe' )?><a href="<?php echo get_page_url('admin_recipe_mod')?>">Créer un objet Recipe</a>
-        </p>
-        <p class="field">
-          <?php echo HTMLHelper::genererInputText('quantity', null, array(), 'Quantity*' )?>
-          
-        </p>
-        <p><?php echo HTMLHelper::genererButton('action',  'set_recipe_byproduct', array('type' => 'submit'), 'Ajouter un élément')?></p>
-      </fieldset>
-    </form>
-    <h4>Recipe Consumable</h4>
-<?php
-
-  $recipe_consumable_list = $item_template->get_recipe_consumable_list();
-
-  if(count($recipe_consumable_list)) {
-?>
-    <table class="table table-bordered table-condensed table-striped table-striped">
-      <thead>
-        <tr>
-          <th>Recipe</th>
-          <th>Quantity</th>          <th>Action</th>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          <td colspan="3"><?php echo count( $recipe_consumable_list )?> lignes</td>
-        </tr>
-      </tfoot>
-      <tbody>
-<?php
-      foreach( $recipe_consumable_list as $recipe_consumable ) {
-
- 
-        $recipe_id_recipe = Recipe::instance( $recipe_consumable['recipe_id'] );        echo '
-        <tr>
-        <td><a href="'.get_page_url('admin_recipe_view', true, array('id' => $recipe_id_recipe->id)).'">'.$recipe_id_recipe->name.'</a></td>
-        <td>'.$recipe_consumable['quantity'].'</td>          <td>
-            <form action="'.get_page_url(PAGE_CODE, true, array('id' => $item_template->id)).'" method="post">
-              '.HTMLHelper::genererInputHidden('id', $item_template->id).'
-
-              '.HTMLHelper::genererInputHidden('recipe_id', $recipe_id_recipe->id).'              '.HTMLHelper::genererButton('action',  'del_recipe_consumable', array('type' => 'submit'), 'Supprimer').'
-            </form>
-          </td>
-        </tr>';
-      }
-?>
-      </tbody>
-    </table>
-<?php
-  }else {
-    echo '<p>Il n\'y a pas d\'éléments à afficher</p>';
-  }
-
-  $liste_valeurs_recipe = Recipe::db_get_select_list();?>
-    <form action="<?php echo get_page_url(PAGE_CODE, true, array('id' => $item_template->id))?>" method="post" class="formulaire">
-      <?php echo HTMLHelper::genererInputHidden('id', $item_template->id )?>
-      <fieldset>
-        <legend>Ajouter un élément</legend>
-        <p class="field">
-          <?php echo HTMLHelper::genererSelect('recipe_id', $liste_valeurs_recipe, null, array(), 'Recipe' )?><a href="<?php echo get_page_url('admin_recipe_mod')?>">Créer un objet Recipe</a>
-        </p>
-        <p class="field">
-          <?php echo HTMLHelper::genererInputText('quantity', null, array(), 'Quantity*' )?>
-          
-        </p>
-        <p><?php echo HTMLHelper::genererButton('action',  'set_recipe_consumable', array('type' => 'submit'), 'Ajouter un élément')?></p>
       </fieldset>
     </form>
 <?php

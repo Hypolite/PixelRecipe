@@ -140,6 +140,70 @@ WHERE `next_item_template_id` = ".mysql_ureal_escape_string($next_item_template_
     return $return;
   }
 
+  public function get_blueprint_byproduct_list($blueprint_id = null) {
+    $where = '';
+    if( ! is_null( $blueprint_id )) $where .= '
+AND `blueprint_id` = '.mysql_ureal_escape_string($blueprint_id);
+
+    $sql = '
+SELECT `blueprint_id`, `item_template_id`, `quantity`
+FROM `blueprint_byproduct`
+WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+    $res = mysql_uquery($sql);
+
+    return mysql_fetch_to_array($res);
+  }
+
+  public function set_blueprint_byproduct( $blueprint_id, $quantity ) {
+    $sql = "REPLACE INTO `blueprint_byproduct` ( `blueprint_id`, `item_template_id`, `quantity` ) VALUES (".mysql_ureal_escape_string( $blueprint_id, $this->get_id(), $quantity ).")";
+
+    return mysql_uquery($sql);
+  }
+
+  public function del_blueprint_byproduct( $blueprint_id = null ) {
+    $where = '';
+    if( ! is_null( $blueprint_id )) $where .= '
+AND `blueprint_id` = '.mysql_ureal_escape_string($blueprint_id);
+    $sql = 'DELETE FROM `blueprint_byproduct`
+    WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+
+    return mysql_uquery($sql);
+  }
+
+
+
+  public function get_blueprint_consumable_list($blueprint_id = null) {
+    $where = '';
+    if( ! is_null( $blueprint_id )) $where .= '
+AND `blueprint_id` = '.mysql_ureal_escape_string($blueprint_id);
+
+    $sql = '
+SELECT `blueprint_id`, `item_template_id`, `quantity`
+FROM `blueprint_consumable`
+WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+    $res = mysql_uquery($sql);
+
+    return mysql_fetch_to_array($res);
+  }
+
+  public function set_blueprint_consumable( $blueprint_id, $quantity ) {
+    $sql = "REPLACE INTO `blueprint_consumable` ( `blueprint_id`, `item_template_id`, `quantity` ) VALUES (".mysql_ureal_escape_string( $blueprint_id, $this->get_id(), $quantity ).")";
+
+    return mysql_uquery($sql);
+  }
+
+  public function del_blueprint_consumable( $blueprint_id = null ) {
+    $where = '';
+    if( ! is_null( $blueprint_id )) $where .= '
+AND `blueprint_id` = '.mysql_ureal_escape_string($blueprint_id);
+    $sql = 'DELETE FROM `blueprint_consumable`
+    WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+
+    return mysql_uquery($sql);
+  }
+
+
+
   public function get_item_template_ability_list($ability_id = null) {
     $where = '';
     if( ! is_null( $ability_id )) $where .= '
@@ -165,70 +229,6 @@ WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
     if( ! is_null( $ability_id )) $where .= '
 AND `ability_id` = '.mysql_ureal_escape_string($ability_id);
     $sql = 'DELETE FROM `item_template_ability`
-    WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
-
-    return mysql_uquery($sql);
-  }
-
-
-
-  public function get_recipe_byproduct_list($recipe_id = null) {
-    $where = '';
-    if( ! is_null( $recipe_id )) $where .= '
-AND `recipe_id` = '.mysql_ureal_escape_string($recipe_id);
-
-    $sql = '
-SELECT `recipe_id`, `item_template_id`, `quantity`
-FROM `recipe_byproduct`
-WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
-    $res = mysql_uquery($sql);
-
-    return mysql_fetch_to_array($res);
-  }
-
-  public function set_recipe_byproduct( $recipe_id, $quantity ) {
-    $sql = "REPLACE INTO `recipe_byproduct` ( `recipe_id`, `item_template_id`, `quantity` ) VALUES (".mysql_ureal_escape_string( $recipe_id, $this->get_id(), $quantity ).")";
-
-    return mysql_uquery($sql);
-  }
-
-  public function del_recipe_byproduct( $recipe_id = null ) {
-    $where = '';
-    if( ! is_null( $recipe_id )) $where .= '
-AND `recipe_id` = '.mysql_ureal_escape_string($recipe_id);
-    $sql = 'DELETE FROM `recipe_byproduct`
-    WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
-
-    return mysql_uquery($sql);
-  }
-
-
-
-  public function get_recipe_consumable_list($recipe_id = null) {
-    $where = '';
-    if( ! is_null( $recipe_id )) $where .= '
-AND `recipe_id` = '.mysql_ureal_escape_string($recipe_id);
-
-    $sql = '
-SELECT `recipe_id`, `item_template_id`, `quantity`
-FROM `recipe_consumable`
-WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
-    $res = mysql_uquery($sql);
-
-    return mysql_fetch_to_array($res);
-  }
-
-  public function set_recipe_consumable( $recipe_id, $quantity ) {
-    $sql = "REPLACE INTO `recipe_consumable` ( `recipe_id`, `item_template_id`, `quantity` ) VALUES (".mysql_ureal_escape_string( $recipe_id, $this->get_id(), $quantity ).")";
-
-    return mysql_uquery($sql);
-  }
-
-  public function del_recipe_consumable( $recipe_id = null ) {
-    $where = '';
-    if( ! is_null( $recipe_id )) $where .= '
-AND `recipe_id` = '.mysql_ureal_escape_string($recipe_id);
-    $sql = 'DELETE FROM `recipe_consumable`
     WHERE `item_template_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
 
     return mysql_uquery($sql);

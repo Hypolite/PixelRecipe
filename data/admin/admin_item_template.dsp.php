@@ -18,9 +18,9 @@
           <th>Sel.</th>
           <th>Name</th>
           <th>Tech</th>
-          <th>Type Id</th>
+          <th>Type</th>
           <th>Obsolete</th>
-          <th>Next Item Template Id</th>        </tr>
+          <th>Next Item Template</th>        </tr>
       </thead>
       <tfoot>
         <tr>

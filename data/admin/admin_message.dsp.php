@@ -17,8 +17,8 @@
         <tr>
           <th>Sel.</th>
           <th>Id</th>
-          <th>Conversation Id</th>
-          <th>Player Id</th>
+          <th>Conversation</th>
+          <th>Player</th>
           <th>Text</th>
           <th>Created</th>        </tr>
       </thead>

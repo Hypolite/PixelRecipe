@@ -18,7 +18,7 @@
           <th>Sel.</th>
           <th>Id</th>
           <th>Hash</th>
-          <th>Player Id</th>
+          <th>Player</th>
           <th>Created</th>
           <th>Expires</th>        </tr>
       </thead>

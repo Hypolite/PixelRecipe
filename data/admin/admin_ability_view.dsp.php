@@ -11,6 +11,65 @@
     <div class="informations formulaire">
     </div>
     <p><a href="<?php echo get_page_url('admin_ability_mod', true, array('id' => $ability->id))?>">Modifier cet objet Ability</a></p>
+    <h4>Blueprint Ability</h4>
+<?php
+
+  $blueprint_ability_list = $ability->get_blueprint_ability_list();
+
+  if(count($blueprint_ability_list)) {
+?>
+    <table class="table table-bordered table-condensed table-striped table-striped">
+      <thead>
+        <tr>
+          <th>Blueprint</th>
+          <th>Points Needed</th>          <th>Action</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <td colspan="3"><?php echo count( $blueprint_ability_list )?> lignes</td>
+        </tr>
+      </tfoot>
+      <tbody>
+<?php
+      foreach( $blueprint_ability_list as $blueprint_ability ) {
+
+ 
+        $blueprint_id_blueprint = Blueprint::instance( $blueprint_ability['blueprint_id'] );        echo '
+        <tr>
+        <td><a href="'.get_page_url('admin_blueprint_view', true, array('id' => $blueprint_id_blueprint->id)).'">'.$blueprint_id_blueprint->name.'</a></td>
+        <td>'.$blueprint_ability['points_needed'].'</td>          <td>
+            <form action="'.get_page_url(PAGE_CODE, true, array('id' => $ability->id)).'" method="post">
+              '.HTMLHelper::genererInputHidden('id', $ability->id).'
+
+              '.HTMLHelper::genererInputHidden('blueprint_id', $blueprint_id_blueprint->id).'              '.HTMLHelper::genererButton('action',  'del_blueprint_ability', array('type' => 'submit'), 'Supprimer').'
+            </form>
+          </td>
+        </tr>';
+      }
+?>
+      </tbody>
+    </table>
+<?php
+  }else {
+    echo '<p>Il n\'y a pas d\'éléments à afficher</p>';
+  }
+
+  $liste_valeurs_blueprint = Blueprint::db_get_select_list();?>
+    <form action="<?php echo get_page_url(PAGE_CODE, true, array('id' => $ability->id))?>" method="post" class="formulaire">
+      <?php echo HTMLHelper::genererInputHidden('id', $ability->id )?>
+      <fieldset>
+        <legend>Ajouter un élément</legend>
+        <p class="field">
+          <?php echo HTMLHelper::genererSelect('blueprint_id', $liste_valeurs_blueprint, null, array(), 'Blueprint' )?><a href="<?php echo get_page_url('admin_blueprint_mod')?>">Créer un objet Blueprint</a>
+        </p>
+        <p class="field">
+          <?php echo HTMLHelper::genererInputText('points_needed', null, array(), 'Points Needed*' )?>
+          
+        </p>
+        <p><?php echo HTMLHelper::genererButton('action',  'set_blueprint_ability', array('type' => 'submit'), 'Ajouter un élément')?></p>
+      </fieldset>
+    </form>
     <h4>Item Template Ability</h4>
 <?php
 
@@ -68,65 +127,6 @@
           
         </p>
         <p><?php echo HTMLHelper::genererButton('action',  'set_item_template_ability', array('type' => 'submit'), 'Ajouter un élément')?></p>
-      </fieldset>
-    </form>
-    <h4>Recipe Ability</h4>
-<?php
-
-  $recipe_ability_list = $ability->get_recipe_ability_list();
-
-  if(count($recipe_ability_list)) {
-?>
-    <table class="table table-bordered table-condensed table-striped table-striped">
-      <thead>
-        <tr>
-          <th>Recipe</th>
-          <th>Points Needed</th>          <th>Action</th>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          <td colspan="3"><?php echo count( $recipe_ability_list )?> lignes</td>
-        </tr>
-      </tfoot>
-      <tbody>
-<?php
-      foreach( $recipe_ability_list as $recipe_ability ) {
-
- 
-        $recipe_id_recipe = Recipe::instance( $recipe_ability['recipe_id'] );        echo '
-        <tr>
-        <td><a href="'.get_page_url('admin_recipe_view', true, array('id' => $recipe_id_recipe->id)).'">'.$recipe_id_recipe->name.'</a></td>
-        <td>'.$recipe_ability['points_needed'].'</td>          <td>
-            <form action="'.get_page_url(PAGE_CODE, true, array('id' => $ability->id)).'" method="post">
-              '.HTMLHelper::genererInputHidden('id', $ability->id).'
-
-              '.HTMLHelper::genererInputHidden('recipe_id', $recipe_id_recipe->id).'              '.HTMLHelper::genererButton('action',  'del_recipe_ability', array('type' => 'submit'), 'Supprimer').'
-            </form>
-          </td>
-        </tr>';
-      }
-?>
-      </tbody>
-    </table>
-<?php
-  }else {
-    echo '<p>Il n\'y a pas d\'éléments à afficher</p>';
-  }
-
-  $liste_valeurs_recipe = Recipe::db_get_select_list();?>
-    <form action="<?php echo get_page_url(PAGE_CODE, true, array('id' => $ability->id))?>" method="post" class="formulaire">
-      <?php echo HTMLHelper::genererInputHidden('id', $ability->id )?>
-      <fieldset>
-        <legend>Ajouter un élément</legend>
-        <p class="field">
-          <?php echo HTMLHelper::genererSelect('recipe_id', $liste_valeurs_recipe, null, array(), 'Recipe' )?><a href="<?php echo get_page_url('admin_recipe_mod')?>">Créer un objet Recipe</a>
-        </p>
-        <p class="field">
-          <?php echo HTMLHelper::genererInputText('points_needed', null, array(), 'Points Needed*' )?>
-          
-        </p>
-        <p><?php echo HTMLHelper::genererButton('action',  'set_recipe_ability', array('type' => 'submit'), 'Ajouter un élément')?></p>
       </fieldset>
     </form>
 <?php

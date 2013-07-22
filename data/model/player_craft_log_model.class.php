@@ -1,13 +1,13 @@
 <?php
 /**
- * Classe Player_Recipe_Log
+ * Classe Player_Craft_Log
  *
  */
 
-class Player_Recipe_Log_Model extends DBObject {
+class Player_Craft_Log_Model extends DBObject {
   // Champs BD
   protected $_player_id = null;
-  protected $_recipe_id = null;
+  protected $_blueprint_id = null;
   protected $_time_taken = null;
   protected $_timestamp = null;
 
@@ -16,7 +16,7 @@ class Player_Recipe_Log_Model extends DBObject {
   }
 
   /* ACCESSEURS */
-  public static function get_table_name() { return "player_recipe_log"; }
+  public static function get_table_name() { return "player_craft_log"; }
 
   public function get_timestamp()    { return guess_time($this->_timestamp);}
 
@@ -39,10 +39,10 @@ WHERE `player_id` = ".mysql_ureal_escape_string($player_id);
 
     return self::sql_to_list($sql);
   }
-  public static function db_get_by_recipe_id($recipe_id) {
+  public static function db_get_by_blueprint_id($blueprint_id) {
     $sql = "
 SELECT `id` FROM `".self::get_table_name()."`
-WHERE `recipe_id` = ".mysql_ureal_escape_string($recipe_id);
+WHERE `blueprint_id` = ".mysql_ureal_escape_string($blueprint_id);
 
     return self::sql_to_list($sql);
   }
@@ -54,7 +54,7 @@ WHERE `recipe_id` = ".mysql_ureal_escape_string($recipe_id);
         $return[ null ] = 'N/A';
     }
 
-    $object_list = Player_Recipe_Log_Model::db_get_all();
+    $object_list = Player_Craft_Log_Model::db_get_all();
     foreach( $object_list as $object ) $return[ $object->get_id() ] = $object->get_id();
 
     return $return;
@@ -80,12 +80,12 @@ WHERE `recipe_id` = ".mysql_ureal_escape_string($recipe_id);
       $return .= '
       <p class="field">'.HTMLHelper::genererSelect('player_id', $option_list, $this->get_player_id(), array(), "Player Id *").'<a href="'.get_page_url('admin_player_mod').'">Créer un objet Player</a></p>';
       $option_list = array();
-      $recipe_list = Recipe::db_get_all();
-      foreach( $recipe_list as $recipe)
-        $option_list[ $recipe->id ] = $recipe->name;
+      $blueprint_list = Blueprint::db_get_all();
+      foreach( $blueprint_list as $blueprint)
+        $option_list[ $blueprint->id ] = $blueprint->name;
 
       $return .= '
-      <p class="field">'.HTMLHelper::genererSelect('recipe_id', $option_list, $this->get_recipe_id(), array(), "Recipe Id *").'<a href="'.get_page_url('admin_recipe_mod').'">Créer un objet Recipe</a></p>
+      <p class="field">'.HTMLHelper::genererSelect('blueprint_id', $option_list, $this->get_blueprint_id(), array(), "Blueprint Id *").'<a href="'.get_page_url('admin_blueprint_mod').'">Créer un objet Blueprint</a></p>
         <p class="field">'.(is_array($this->get_time_taken())?
           HTMLHelper::genererTextArea( "time_taken", parameters_to_string( $this->get_time_taken() ), array(), "Time Taken *" ):
           HTMLHelper::genererInputText( "time_taken", $this->get_time_taken(), array(), "Time Taken *")).'
@@ -110,7 +110,7 @@ WHERE `recipe_id` = ".mysql_ureal_escape_string($recipe_id);
   public static function get_message_erreur($num_error) {
     switch($num_error) { 
       case 1 : $return = "Le champ <strong>Player Id</strong> est obligatoire."; break;
-      case 2 : $return = "Le champ <strong>Recipe Id</strong> est obligatoire."; break;
+      case 2 : $return = "Le champ <strong>Blueprint Id</strong> est obligatoire."; break;
       case 3 : $return = "Le champ <strong>Time Taken</strong> est obligatoire."; break;
       case 4 : $return = "Le champ <strong>Timestamp</strong> est obligatoire."; break;
       default: $return = "Erreur de saisie, veuillez vérifier les champs.";
@@ -129,7 +129,7 @@ WHERE `recipe_id` = ".mysql_ureal_escape_string($recipe_id);
     $return = array();
 
     $return[] = Member::check_compulsory($this->get_player_id(), 1, true);
-    $return[] = Member::check_compulsory($this->get_recipe_id(), 2);
+    $return[] = Member::check_compulsory($this->get_blueprint_id(), 2);
     $return[] = Member::check_compulsory($this->get_time_taken(), 3, true);
     $return[] = Member::check_compulsory($this->get_timestamp(), 4);
 

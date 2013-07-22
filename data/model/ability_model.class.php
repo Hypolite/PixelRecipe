@@ -92,6 +92,38 @@ class Ability_Model extends DBObject {
     return $return;
   }
 
+  public function get_blueprint_ability_list($blueprint_id = null) {
+    $where = '';
+    if( ! is_null( $blueprint_id )) $where .= '
+AND `blueprint_id` = '.mysql_ureal_escape_string($blueprint_id);
+
+    $sql = '
+SELECT `blueprint_id`, `ability_id`, `points_needed`
+FROM `blueprint_ability`
+WHERE `ability_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+    $res = mysql_uquery($sql);
+
+    return mysql_fetch_to_array($res);
+  }
+
+  public function set_blueprint_ability( $blueprint_id, $points_needed ) {
+    $sql = "REPLACE INTO `blueprint_ability` ( `blueprint_id`, `ability_id`, `points_needed` ) VALUES (".mysql_ureal_escape_string( $blueprint_id, $this->get_id(), $points_needed ).")";
+
+    return mysql_uquery($sql);
+  }
+
+  public function del_blueprint_ability( $blueprint_id = null ) {
+    $where = '';
+    if( ! is_null( $blueprint_id )) $where .= '
+AND `blueprint_id` = '.mysql_ureal_escape_string($blueprint_id);
+    $sql = 'DELETE FROM `blueprint_ability`
+    WHERE `ability_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
+
+    return mysql_uquery($sql);
+  }
+
+
+
   public function get_item_template_ability_list($item_template_id = null) {
     $where = '';
     if( ! is_null( $item_template_id )) $where .= '
@@ -117,38 +149,6 @@ WHERE `ability_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
     if( ! is_null( $item_template_id )) $where .= '
 AND `item_template_id` = '.mysql_ureal_escape_string($item_template_id);
     $sql = 'DELETE FROM `item_template_ability`
-    WHERE `ability_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
-
-    return mysql_uquery($sql);
-  }
-
-
-
-  public function get_recipe_ability_list($recipe_id = null) {
-    $where = '';
-    if( ! is_null( $recipe_id )) $where .= '
-AND `recipe_id` = '.mysql_ureal_escape_string($recipe_id);
-
-    $sql = '
-SELECT `recipe_id`, `ability_id`, `points_needed`
-FROM `recipe_ability`
-WHERE `ability_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
-    $res = mysql_uquery($sql);
-
-    return mysql_fetch_to_array($res);
-  }
-
-  public function set_recipe_ability( $recipe_id, $points_needed ) {
-    $sql = "REPLACE INTO `recipe_ability` ( `recipe_id`, `ability_id`, `points_needed` ) VALUES (".mysql_ureal_escape_string( $recipe_id, $this->get_id(), $points_needed ).")";
-
-    return mysql_uquery($sql);
-  }
-
-  public function del_recipe_ability( $recipe_id = null ) {
-    $where = '';
-    if( ! is_null( $recipe_id )) $where .= '
-AND `recipe_id` = '.mysql_ureal_escape_string($recipe_id);
-    $sql = 'DELETE FROM `recipe_ability`
     WHERE `ability_id` = '.mysql_ureal_escape_string($this->get_id()).$where;
 
     return mysql_uquery($sql);

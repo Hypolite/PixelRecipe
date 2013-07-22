@@ -41,22 +41,22 @@
 	<li><?php echo $item->name?> <a href="<?php echo Page::get_url('use', array('item_id' => $item->id));?>">Use</a></li>
 <?php endforeach;?>
 </ul>
-<h3>Recipes</h3>
+<h3>Blueprints</h3>
 <h4>Gathering</h4>
 <?php
-	$gather_recipes = Recipe::get_gather_list();
+	$gather_blueprints = Blueprint::get_gather_list();
 ?>
 <ul>
-<?php foreach( $gather_recipes as $recipe ) :?>
-	<li><a href="<?php echo Page::get_url('cook', array('recipe_id' => $recipe->id))?>"><?php echo $recipe->name?></a></li>
+<?php foreach( $gather_blueprints as $blueprint ) :?>
+	<li><a href="<?php echo Page::get_url('craft', array('blueprint_id' => $blueprint->id))?>"><?php echo $blueprint->name?></a></li>
 <?php endforeach;?>
 </ul>
 <h4>Craft</h4>
 <?php
-	$gather_recipes = Recipe::get_available_recipe_list( $current_player );
+	$gather_blueprints = Blueprint::get_available_blueprint_list( $current_player );
 ?>
 <ul>
-<?php foreach( $gather_recipes as $recipe ) :?>
-	<li><a href="<?php echo Page::get_url('cook', array('recipe_id' => $recipe->id))?>"><?php echo $recipe->name?></a></li>
+<?php foreach( $gather_blueprints as $blueprint ) :?>
+	<li><a href="<?php echo Page::get_url('craft', array('blueprint_id' => $blueprint->id))?>"><?php echo $blueprint->name?></a></li>
 <?php endforeach;?>
 </ul>

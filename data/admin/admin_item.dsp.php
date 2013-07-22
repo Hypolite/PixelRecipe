@@ -17,8 +17,8 @@
         <tr>
           <th>Sel.</th>
           <th>Name</th>
-          <th>Item Template Id</th>
-          <th>Owner Id</th>
+          <th>Item Template</th>
+          <th>Owner</th>
           <th>Quality</th>
           <th>Clock</th>
           <th>Obsolete</th>

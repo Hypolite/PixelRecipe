@@ -3,14 +3,14 @@
 
 	$current_player = Player::get_current( $member );
 
-	$recipe = Recipe::instance(getValue('recipe_id'));
+	$blueprint = Blueprint::instance(getValue('blueprint_id'));
 
-	if( $recipe->id ) {
+	if( $blueprint->id ) {
 		try {
-			$current_player->craft( $recipe );
-			Page::add_message('Recipe "'.$recipe->name.'" is crafted!');
+			$current_player->craft( $blueprint );
+			Page::add_message('Blueprint "'.$blueprint->name.'" is crafted!');
 		}catch( Exception $e ) {
-			Page::add_message('Unable to craft "'.$recipe->name.'"', Page::PAGE_MESSAGE_WARNING);
+			Page::add_message('Unable to craft "'.$blueprint->name.'"', Page::PAGE_MESSAGE_WARNING);
 		}
 	}
 

@@ -1,12 +1,12 @@
 <?php
 /**
- * Class Recipe
+ * Class Blueprint
  *
  */
 
-require_once( DATA."model/recipe_model.class.php" );
+require_once( DATA."model/blueprint_model.class.php" );
 
-class Recipe extends Recipe_Model {
+class Blueprint extends Blueprint_Model {
 
   // CUSTOM
 
@@ -56,6 +56,7 @@ ON p_i.`item_template_id` = r_c.`item_template_id` AND p_i.`quantity` >= r_c.`qu
 
 		return Recipe::sql_to_list($sql);
 	}
+
 
   // /CUSTOM
 

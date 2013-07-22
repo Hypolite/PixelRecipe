@@ -21,7 +21,7 @@
           <th>Locale</th>
           <th>Translation</th>
           <th>Context</th>
-          <th>Translator Id</th>
+          <th>Translator</th>
           <th>Created</th>
           <th>Updated</th>        </tr>
       </thead>

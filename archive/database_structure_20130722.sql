@@ -69,6 +69,81 @@ CREATE TABLE `api_token` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `blueprint`
+--
+
+DROP TABLE IF EXISTS `blueprint`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `blueprint` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `item_template_id` bigint(20) NOT NULL,
+  `skill_id` bigint(20) DEFAULT NULL,
+  `time` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `item_template_id` (`item_template_id`),
+  KEY `skill_id` (`skill_id`),
+  CONSTRAINT `blueprint_ibfk_1` FOREIGN KEY (`item_template_id`) REFERENCES `item_template` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `blueprint_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `blueprint_ability`
+--
+
+DROP TABLE IF EXISTS `blueprint_ability`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `blueprint_ability` (
+  `blueprint_id` bigint(20) NOT NULL,
+  `ability_id` bigint(20) NOT NULL,
+  `points_needed` int(11) NOT NULL,
+  PRIMARY KEY (`blueprint_id`,`ability_id`),
+  KEY `ability_id` (`ability_id`),
+  CONSTRAINT `blueprint_ability_ibfk_3` FOREIGN KEY (`blueprint_id`) REFERENCES `blueprint` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `blueprint_ability_ibfk_2` FOREIGN KEY (`ability_id`) REFERENCES `ability` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `blueprint_byproduct`
+--
+
+DROP TABLE IF EXISTS `blueprint_byproduct`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `blueprint_byproduct` (
+  `blueprint_id` bigint(20) NOT NULL,
+  `item_template_id` bigint(20) NOT NULL,
+  `quantity` bigint(20) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`blueprint_id`,`item_template_id`),
+  KEY `item_template_id` (`item_template_id`),
+  CONSTRAINT `blueprint_byproduct_ibfk_4` FOREIGN KEY (`item_template_id`) REFERENCES `item_template` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `blueprint_byproduct_ibfk_3` FOREIGN KEY (`blueprint_id`) REFERENCES `blueprint` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `blueprint_consumable`
+--
+
+DROP TABLE IF EXISTS `blueprint_consumable`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `blueprint_consumable` (
+  `blueprint_id` bigint(20) NOT NULL,
+  `item_template_id` bigint(20) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  PRIMARY KEY (`blueprint_id`,`item_template_id`),
+  KEY `item_template_id` (`item_template_id`),
+  CONSTRAINT `blueprint_consumable_ibfk_4` FOREIGN KEY (`blueprint_id`) REFERENCES `blueprint` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `blueprint_consumable_ibfk_3` FOREIGN KEY (`item_template_id`) REFERENCES `item_template` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `conversation`
 --
 
@@ -271,7 +346,7 @@ CREATE TABLE `page` (
   `rewrite_pattern` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=5843 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB AUTO_INCREMENT=5885 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -297,6 +372,27 @@ CREATE TABLE `player` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `player_craft_log`
+--
+
+DROP TABLE IF EXISTS `player_craft_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `player_craft_log` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `player_id` int(11) NOT NULL,
+  `blueprint_id` bigint(20) NOT NULL,
+  `time_taken` int(11) NOT NULL,
+  `timestamp` date NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `player_id` (`player_id`),
+  KEY `recipe_id` (`blueprint_id`),
+  CONSTRAINT `player_craft_log_ibfk_2` FOREIGN KEY (`blueprint_id`) REFERENCES `blueprint` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `player_craft_log_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `player_energy_log`
 --
 
@@ -312,28 +408,7 @@ CREATE TABLE `player_energy_log` (
   PRIMARY KEY (`id`),
   KEY `player_id` (`player_id`),
   CONSTRAINT `player_energy_log_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `player_recipe_log`
---
-
-DROP TABLE IF EXISTS `player_recipe_log`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `player_recipe_log` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `player_id` int(11) NOT NULL,
-  `recipe_id` bigint(20) NOT NULL,
-  `time_taken` int(11) NOT NULL,
-  `timestamp` date NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `player_id` (`player_id`),
-  KEY `recipe_id` (`recipe_id`),
-  CONSTRAINT `player_recipe_log_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `player_recipe_log_ibfk_2` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -351,81 +426,6 @@ CREATE TABLE `player_skill` (
   KEY `skill_id` (`skill_id`),
   CONSTRAINT `player_skill_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `player_skill_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `recipe`
---
-
-DROP TABLE IF EXISTS `recipe`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `recipe` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `item_template_id` bigint(20) NOT NULL,
-  `skill_id` bigint(20) DEFAULT NULL,
-  `time` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `item_template_id` (`item_template_id`),
-  KEY `skill_id` (`skill_id`),
-  CONSTRAINT `recipe_ibfk_1` FOREIGN KEY (`item_template_id`) REFERENCES `item_template` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `recipe_ibfk_2` FOREIGN KEY (`skill_id`) REFERENCES `skill` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `recipe_ability`
---
-
-DROP TABLE IF EXISTS `recipe_ability`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `recipe_ability` (
-  `recipe_id` bigint(20) NOT NULL,
-  `ability_id` bigint(20) NOT NULL,
-  `points_needed` int(11) NOT NULL,
-  PRIMARY KEY (`recipe_id`,`ability_id`),
-  KEY `ability_id` (`ability_id`),
-  CONSTRAINT `recipe_ability_ibfk_1` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `recipe_ability_ibfk_2` FOREIGN KEY (`ability_id`) REFERENCES `ability` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `recipe_byproduct`
---
-
-DROP TABLE IF EXISTS `recipe_byproduct`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `recipe_byproduct` (
-  `recipe_id` bigint(20) NOT NULL,
-  `item_template_id` bigint(20) NOT NULL,
-  `quantity` bigint(20) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`recipe_id`,`item_template_id`),
-  KEY `item_template_id` (`item_template_id`),
-  CONSTRAINT `recipe_byproduct_ibfk_1` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `recipe_byproduct_ibfk_2` FOREIGN KEY (`item_template_id`) REFERENCES `item_template` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `recipe_consumable`
---
-
-DROP TABLE IF EXISTS `recipe_consumable`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `recipe_consumable` (
-  `recipe_id` bigint(20) NOT NULL,
-  `item_template_id` bigint(20) NOT NULL,
-  `quantity` int(11) NOT NULL,
-  PRIMARY KEY (`recipe_id`,`item_template_id`),
-  KEY `item_template_id` (`item_template_id`),
-  CONSTRAINT `recipe_consumable_ibfk_1` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `recipe_consumable_ibfk_2` FOREIGN KEY (`item_template_id`) REFERENCES `item_template` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -492,4 +492,4 @@ CREATE TABLE `translation` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-07-21 23:52:35
+-- Dump completed on 2013-07-22 18:49:38

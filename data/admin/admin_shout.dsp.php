@@ -18,7 +18,7 @@
           <th>Sel.</th>
           <th>Id</th>
           <th>Date Sent</th>
-          <th>Shouter Id</th>
+          <th>Shouter</th>
           <th>Text</th>        </tr>
       </thead>
       <tfoot>
