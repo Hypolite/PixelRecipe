@@ -5,10 +5,10 @@
 	$item = Item::instance($item_id);
 
 	try{
-		$current_player->utilize($item);
-		Page::add_message('Item '.$item->name.' succesfully used');
+		$current_player->eat($item);
+		Page::add_message('Item '.$item->name.' succesfully eaten');
 	}catch(Exception $e) {
-		$message = 'Unable to utilise '.$item->name;
+		$message = 'Unable to eat '.$item->name;
 		if( $e->getMessage() ) {
 			$message = $e->getMessage();
 		}

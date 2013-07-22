@@ -136,13 +136,13 @@ ORDER BY `clock` DESC'.$limit;
 			}
 
 		}else {
-			throw new Exception("You have ".count($item_list)." out of ".$quantity." required items of ".$item_template->name);
+			throw new Exception("You have only ".count($item_list)." out of ".$quantity." required items of ".$item_template->name);
 		}
 
 		return true;
 	}
 	
-	public function utilize(Item $item) {
+	public function eat(Item $item) {
 		if( $item->id === null )
 			throw new Exception('Non-existing item.');
 			
@@ -152,12 +152,15 @@ ORDER BY `clock` DESC'.$limit;
 		if( $item->destroyed )
 			throw new Exception('Item '.$item->name.' is destroyed.');
 		
+		if( $this->current_energy >= $this->max_energy )
+			throw new Exception('You are already full.');
+		
 		/* @var $item_template Item_Template */
 		$item_template = Item_Template::instance($item->item_template_id);
 		// 8 = Feeding
 		$ability_list = $item_template->get_item_template_ability_list(8);
 		if( count( $ability_list ) == 0 )
-			throw new Exception('Item '.$item->name.' is not utilizable.');
+			throw new Exception('Item '.$item->name.' is not edible.');
 		
 		$feeding_ability = array_pop($ability_list);
 		
@@ -175,25 +178,32 @@ ORDER BY `clock` DESC'.$limit;
 		mysql_uquery('BEGIN');
 
 		try {
+			$time_taken = $recipe->time;
+			
+			if( $time_taken > $this->current_energy )
+				throw new Exception('You don\'t have enough energy to craft this item.');
+			
 			// Remove Consumables from player's inventory
 			$consumable_list = $recipe->get_consumable_list();
 
 			foreach( $consumable_list as $consumable ) {
-				$this->lose_item( $consumable );
+				$item_template = Item_Template::instance($consumable['item_template_id']);
+				$this->lose_item( $item_template, $consumable['quantity'] );
 			}
 
 			// Add the Byproducts to player's inventory
 			$byproduct_list = $recipe->get_byproduct_list();
 
 			foreach( $byproduct_list as $byproduct ) {
-				$this->gain_item( $byproduct );
+				$item_template = Item_Template::instance($byproduct['item_template_id']);
+				for($i = 0; $i < $byproduct['quantity']; $i++) {
+					$this->gain_item( $byproduct );				
+				}
 			}
 
 			// Add the result to player's inventory
 			$result = Item_Template::instance($recipe->item_template_id);
 			$this->gain_item( $result );
-
-			$time_taken = $recipe->time;
 
 			// Make time pass for the player's inventory
 			$this->pass_time($time_taken);
@@ -216,7 +226,7 @@ ORDER BY `clock` DESC'.$limit;
 			mysql_uquery('ROLLBACK');
 
 			throw $e;
-		$return = $e->getCode();
+			$return = $e->getCode();
 		}
 
 		return $return;
