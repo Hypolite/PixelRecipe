@@ -60,7 +60,7 @@ WHERE `member_id` = '.$member->id;
 	public function get_current_energy() {
 		$sql = '
 SELECT IFNULL(SUM(`time_taken`), 0)
-FROM `player_blueprint_log`
+FROM `player_craft_log`
 WHERE `player_id` = '.mysql_ureal_escape_string($this->id);
 		$res = mysql_uquery($sql);
 		$energy_consumed = array_pop(mysql_fetch_row($res));
@@ -203,7 +203,7 @@ ORDER BY `clock` DESC'.$limit;
 			//$this->increase_skill( $blueprint_skill, $time_taken );
 
 			// Add a log entry
-			$log_entry = Player_Blueprint_Log::instance();
+			$log_entry = Player_Craft_Log::instance();
 			$log_entry->player_id = $this->id;
 			$log_entry->blueprint_id = $blueprint->id;
 			$log_entry->time_taken = $time_taken;
