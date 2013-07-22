@@ -10,6 +10,8 @@ class Player_Model extends DBObject {
   protected $_name = null;
   protected $_active = null;
   protected $_api_key = null;
+  protected $_max_energy = null;
+  protected $_last_active = null;
   protected $_created = null;
 
   public function __construct($id = null) {
@@ -21,6 +23,7 @@ class Player_Model extends DBObject {
 
   public function get_active() { return $this->is_active(); }
   public function is_active() { return ($this->_active == 1); }
+  public function get_last_active()    { return guess_time($this->_last_active);}
   public function get_created()    { return guess_time($this->_created);}
 
   /* MUTATEURS */
@@ -33,6 +36,10 @@ class Player_Model extends DBObject {
   public function set_active($active) {
     if($active) $data = 1; else $data = 0; $this->_active = $data;
   }
+  public function set_max_energy($max_energy) {
+    if( is_numeric($max_energy) && (int)$max_energy == $max_energy) $data = intval($max_energy); else $data = null; $this->_max_energy = $data;
+  }
+  public function set_last_active($date) { $this->_last_active = guess_time($date, GUESS_DATE_MYSQL);}
   public function set_created($date) { $this->_created = guess_time($date, GUESS_DATE_MYSQL);}
 
   /* FONCTIONS SQL */
@@ -87,6 +94,14 @@ WHERE `member_id` = ".mysql_ureal_escape_string($member_id);
           HTMLHelper::genererTextArea( "api_key", parameters_to_string( $this->get_api_key() ), array(), "Api Key *" ):
           HTMLHelper::genererInputText( "api_key", $this->get_api_key(), array(), "Api Key *")).'
         </p>
+        <p class="field">'.(is_array($this->get_max_energy())?
+          HTMLHelper::genererTextArea( "max_energy", parameters_to_string( $this->get_max_energy() ), array(), "Max Energy *" ):
+          HTMLHelper::genererInputText( "max_energy", $this->get_max_energy(), array(), "Max Energy *")).'
+        </p>
+        <p class="field">'.(is_array($this->get_last_active())?
+          HTMLHelper::genererTextArea( "last_active", parameters_to_string( $this->get_last_active() ), array(), "Last Active *" ):
+          HTMLHelper::genererInputText( "last_active", $this->get_last_active(), array(), "Last Active *")).'
+        </p>
         <p class="field">'.(is_array($this->get_created())?
           HTMLHelper::genererTextArea( "created", parameters_to_string( $this->get_created() ), array(), "Created *" ):
           HTMLHelper::genererInputText( "created", $this->get_created(), array(), "Created *")).'
@@ -109,7 +124,9 @@ WHERE `member_id` = ".mysql_ureal_escape_string($member_id);
       case 1 : $return = "Le champ <strong>Member Id</strong> est obligatoire."; break;
       case 2 : $return = "Le champ <strong>Name</strong> est obligatoire."; break;
       case 3 : $return = "Le champ <strong>Api Key</strong> est obligatoire."; break;
-      case 4 : $return = "Le champ <strong>Created</strong> est obligatoire."; break;
+      case 4 : $return = "Le champ <strong>Max Energy</strong> est obligatoire."; break;
+      case 5 : $return = "Le champ <strong>Last Active</strong> est obligatoire."; break;
+      case 6 : $return = "Le champ <strong>Created</strong> est obligatoire."; break;
       default: $return = "Erreur de saisie, veuillez vérifier les champs.";
     }
     return $return;
@@ -128,7 +145,9 @@ WHERE `member_id` = ".mysql_ureal_escape_string($member_id);
     $return[] = Member::check_compulsory($this->get_member_id(), 1, true);
     $return[] = Member::check_compulsory($this->get_name(), 2);
     $return[] = Member::check_compulsory($this->get_api_key(), 3);
-    $return[] = Member::check_compulsory($this->get_created(), 4);
+    $return[] = Member::check_compulsory($this->get_max_energy(), 4, true);
+    $return[] = Member::check_compulsory($this->get_last_active(), 5);
+    $return[] = Member::check_compulsory($this->get_created(), 6);
 
     $return = array_unique($return);
     if(($true_key = array_search(true, $return, true)) !== false) {

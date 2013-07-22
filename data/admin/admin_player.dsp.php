@@ -17,9 +17,11 @@
         <tr>
           <th>Sel.</th>
           <th>Name</th>
-          <th>Member Id</th>
+          <th>Member</th>
           <th>Active</th>
           <th>Api Key</th>
+          <th>Max Energy</th>
+          <th>Last Active</th>
           <th>Created</th>        </tr>
       </thead>
       <tfoot>
@@ -40,6 +42,8 @@
           <td>'.$member_temp->name.'</td>
           <td>'.$tab_visible[$player->active].'</td>
           <td>'.(is_array($player->api_key)?nl2br(parameters_to_string($player->api_key)):$player->api_key).'</td>
+          <td>'.(is_array($player->max_energy)?nl2br(parameters_to_string($player->max_energy)):$player->max_energy).'</td>
+          <td>'.guess_time($player->last_active, GUESS_DATETIME_LOCALE).'</td>
           <td>'.guess_time($player->created, GUESS_DATETIME_LOCALE).'</td>
           <td><a href="'.htmlentities_utf8(Page::get_url('admin_player_mod', array('id' => $player->id))).'"><i class="icon-pencil" title="Modifier"></i></a></td>
         </tr>';

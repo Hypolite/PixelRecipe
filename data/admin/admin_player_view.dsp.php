@@ -30,6 +30,14 @@
               <span class="value"><?php echo is_array($player->api_key)?nl2br(parameters_to_string( $player->api_key )):$player->api_key?></span>
             </p>
             <p class="field">
+              <span class="libelle">Max Energy</span>
+              <span class="value"><?php echo is_array($player->max_energy)?nl2br(parameters_to_string( $player->max_energy )):$player->max_energy?></span>
+            </p>
+            <p class="field">
+              <span class="libelle">Last Active</span>
+              <span class="value"><?php echo guess_time($player->last_active, GUESS_DATETIME_LOCALE)?></span>
+            </p>
+            <p class="field">
               <span class="libelle">Created</span>
               <span class="value"><?php echo guess_time($player->created, GUESS_DATETIME_LOCALE)?></span>
             </p>    </div>

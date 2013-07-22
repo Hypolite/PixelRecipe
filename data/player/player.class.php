@@ -66,6 +66,24 @@ WHERE `member_id` = '.$member->id;
 
 		return $return;
 	}
+        
+	public function get_current_energy() {
+		$sql = '
+SELECT IFNULL(SUM(`time_taken`), 0)
+FROM `player_recipe_log`
+WHERE `player_id` = '.mysql_ureal_escape_string($this->id);
+		$res = mysql_uquery($sql);
+		$energy_consumed = array_pop(mysql_fetch_row($res));
+		
+		$sql = '
+SELECT IFNULL(SUM(`delta`), 0)
+FROM `player_energy_log`
+WHERE `player_id` = '.mysql_ureal_escape_string($this->id);
+		$res = mysql_uquery($sql);
+		$energy_gained = array_pop(mysql_fetch_row($res));
+		
+		return $energy_gained - $energy_consumed;
+	}
 
 	public function get_inventory_list() {
 		$sql = '
@@ -122,6 +140,35 @@ ORDER BY `clock` DESC'.$limit;
 		}
 
 		return true;
+	}
+	
+	public function utilize(Item $item) {
+		if( $item->id === null )
+			throw new Exception('Non-existing item.');
+			
+		if( $item->owner_id != $this->id )
+			throw new Exception('Item '.$item->name.' doesn\'t belong to you.');
+		
+		if( $item->destroyed )
+			throw new Exception('Item '.$item->name.' is destroyed.');
+		
+		/* @var $item_template Item_Template */
+		$item_template = Item_Template::instance($item->item_template_id);
+		// 8 = Feeding
+		$ability_list = $item_template->get_item_template_ability_list(8);
+		if( count( $ability_list ) == 0 )
+			throw new Exception('Item '.$item->name.' is not utilizable.');
+		
+		$feeding_ability = array_pop($ability_list);
+		
+		$player_energy_log = Player_Energy_Log::instance();
+		$player_energy_log->player_id = $this->id;
+		$player_energy_log->reason = 'Food';
+		$player_energy_log->delta = $feeding_ability['points_provided'];
+		$player_energy_log->timestamp = time();
+		$player_energy_log->save();
+		
+		$item->destroy();
 	}
 
 	public function cook( Recipe $recipe ) {
