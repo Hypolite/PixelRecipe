@@ -139,8 +139,8 @@
 					return $this->$var;
 				}else {
 					$debug_backtrace = debug_backtrace();
-					error_log('[Framework] __call:get : Class variable doesn\'t exist : '.$var.' '. $debug_backtrace[2]['file']. ' ['. $debug_backtrace[2]['line'].']');
-					throw new Exception('[Framework] __call:get : Class variable doesn\'t exist : '.$var);
+					error_log('[Framework] __call:get : Class variable doesn\'t exist: '.get_called_class().'->'.$var.' '. $debug_backtrace[2]['file']. ' ['. $debug_backtrace[2]['line'].']');
+					throw new Exception('[Framework] __call:get : Class variable doesn\'t exist.'.get_called_class().'->'.$var);
 					return null;
 				}
 			}
@@ -154,14 +154,14 @@
 					$return = true;
 				}else {
 					$debug_backtrace = debug_backtrace();
-					error_log('[Framework] __call:set : Class variable doesn\'t exist : '.$var.' '. $debug_backtrace[2]['file']. ' ['. $debug_backtrace[2]['line'].']');
-					throw new Exception('[Framework] __call:set : Class variable doesn\'t exist : '.$var);
+					error_log('[Framework] __call:set : Class variable doesn\'t exist: '.get_called_class().'->'.$var.' '. $debug_backtrace[2]['file']. ' ['. $debug_backtrace[2]['line'].']');
+					throw new Exception('[Framework] __call:set : Class variable doesn\'t exist : '.get_called_class().'->'.$var);
 					return null;
 				}
 			}
 			if( is_null( $return ) ) {
-				error_log('[Framework] __call: Method doesn\'t exist : '.$method);
-				throw new Exception('[Framework] __call: Method doesn\'t exist : '.$method);
+				error_log('[Framework] __call: Method doesn\'t exist : '.get_called_class().'->'.$method);
+				throw new Exception('[Framework] __call: Method doesn\'t exist : '.get_called_class().'->'.$method);
 			}
 		}
 
