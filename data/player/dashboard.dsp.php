@@ -31,10 +31,14 @@
     }
 ?>
 </div>
+<h3>Energy</h3>
+<ul>
+    <li><?php echo $current_player->get_current_energy()?>/<?php echo $current_player->max_energy?></li>
+</ul>
 <h3>Inventory</h3>
 <ul>
 <?php foreach( $current_player->get_inventory_list() as $item ):?>
-	<li><?php echo $item->name?></li>
+	<li><?php echo $item->name?> <a href="<?php echo Page::get_url('use', array('item_id' => $item->id));?>">Use</a></li>
 <?php endforeach;?>
 </ul>
 <h3>Recipes</h3>
