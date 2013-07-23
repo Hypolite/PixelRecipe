@@ -12,7 +12,7 @@
 		if( $e->getMessage() ) {
 			$message = $e->getMessage();
 		}
-		Page::add_message($message, Page::PAGE_MESSAGE_ERROR);
+		Page::add_message($message, Page::PAGE_MESSAGE_WARNING);
 	}
 
 	Page::redirect('dashboard');
