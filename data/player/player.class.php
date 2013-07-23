@@ -132,6 +132,30 @@ ORDER BY `clock` DESC'.$limit;
 		return true;
 	}
 	
+	public function sleep() {
+		$sleep_gain = 0;
+		
+		$current_energy = $this->current_energy;
+		if( $current_energy < $this->max_energy ) {
+			$time_delta = time() - guess_time( $this->last_active, GUESS_TIME_TIMESTAMP );
+
+			if( $time_delta > SLEEP_ENERGY_COOLDOWN ) {
+				$sleep_gain = min( $this->max_energy - $current_energy, floor($time_delta / SLEEP_ENERGY_COOLDOWN) );
+
+				$player_energy_log = Player_Energy_Log::instance();
+				$player_energy_log->player_id = $this->id;
+				$player_energy_log->reason = 'Sleep';
+				$player_energy_log->delta = $sleep_gain;
+				$player_energy_log->timestamp = time();
+				$player_energy_log->save();
+				
+				$this->pass_time($sleep_gain);
+			}
+		}
+		
+		return $sleep_gain;
+	}
+	
 	public function eat(Item $item) {
 		if( $item->id === null )
 			throw new Exception('Non-existing item.');
