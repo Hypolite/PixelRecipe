@@ -85,6 +85,7 @@
   require_once(INC.'PHPMailer/class.phpmailer.php');
   // Fonctions html
   require_once(INC.'html.class.php');
+  require_once(INC.'game_variables.inc.php');
 
   //Includes classes
   require_once('data/db_object.class.php');
