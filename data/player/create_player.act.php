@@ -9,6 +9,9 @@
       $player->member_id = Member::get_current_user_id();
       $player->api_key = sha1( microtime() );
       $player->active = true;
+      $player->tech = 0;
+      $player->max_energy = 100;
+      $player->last_active = time();
       $player->created = time();
 
       $player->load_from_html_form($_POST, $_FILES);
