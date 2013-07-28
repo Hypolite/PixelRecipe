@@ -34,13 +34,13 @@ class Item extends Item_Model {
 		if( $this->obsolete != 0 && $this->clock >= $this->obsolete ) {
 			$this->destroy();
 
-			if( $item_template->next_template_id ) {
-				$new_item_template = Item_Template::instance($item_template->next_template_id);
+			if( $item_template->next_item_template_id ) {
+				$new_item_template = Item_Template::instance($item_template->next_item_template_id);
 
 				$new_item = Item::create_from_template($new_item_template);
 
-				$new_item->owner_id = $item->owner_id;
-				$new_item->quality = $item->quality;
+				$new_item->owner_id = $this->owner_id;
+				$new_item->quality = $this->quality;
 				$new_item->save();
 			}
 		}
@@ -50,18 +50,18 @@ class Item extends Item_Model {
 		$this->destroyed = guess_time(time(), GUESS_TIME_MYSQL);
 		$this->save();
 	}
-	
+
 	public function is_edible() {
 		/* @var $item_template Item_Template */
 		$item_template = Item_Template::instance($this->item_template_id);
-		
+
 		return $item_template->is_edible();
 	}
 
 	public function get_ability_points_provided( $ability_id ) {
 		/* @var $item_template Item_Template */
 		$item_template = Item_Template::instance($this->item_template_id);
-		
+
 		return $item_template->get_ability_points_provided( $ability_id );
 	}
 
