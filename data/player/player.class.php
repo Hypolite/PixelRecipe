@@ -77,10 +77,33 @@ WHERE `player_id` = '.mysql_ureal_escape_string($this->id);
 
 	public function get_inventory_list() {
 		$sql = '
-SELECT *
+SELECT i_t.`id`, COUNT(*) AS `count`, MIN(i.`id`) AS `oldest_item_id`
+FROM `item_template` i_t
+JOIN `item` i ON i.`item_template_id` = i_t.`id`
+WHERE i.`owner_id` = '.mysql_ureal_escape_string($this->id).'
+AND i.`destroyed` IS NULL
+GROUP BY i_t.`id`';
+
+		$res = mysql_uquery($sql);
+		$list = mysql_fetch_to_array($res);
+
+		foreach( $list as $key => $inventory_line ) {
+			$item_template = Item_Template::instance($inventory_line['id']);
+
+			unset($list[$key]['id']);
+			$list[$key]['item_template'] = $item_template;
+		}
+
+		return $list;
+	}
+
+	public function get_item_list() {
+		$sql = '
+SELECT *, COUNT(*) AS `count`, MAX(`id`) AS `oldest_item_id`
 FROM `item`
 WHERE `owner_id` = '.mysql_ureal_escape_string($this->id).'
-AND `destroyed` IS NULL';
+AND `destroyed` IS NULL
+GROUP BY `item_template_id`';
 
 		return Item::sql_to_list($sql);
 	}
@@ -197,7 +220,7 @@ ORDER BY `clock` DESC'.$limit;
 			mysql_uquery('BEGIN');
 
 			// Remove Consumables from player's inventory
-			$consumable_list = $blueprint->get_consumable_list();
+			$consumable_list = $blueprint->get_blueprint_consumable_list();
 
 			foreach( $consumable_list as $consumable ) {
 				$item_template = Item_Template::instance($consumable['item_template_id']);
@@ -205,12 +228,12 @@ ORDER BY `clock` DESC'.$limit;
 			}
 
 			// Add the Byproducts to player's inventory
-			$byproduct_list = $blueprint->get_byproduct_list();
+			$byproduct_list = $blueprint->get_blueprint_byproduct_list();
 
 			foreach( $byproduct_list as $byproduct ) {
 				$item_template = Item_Template::instance($byproduct['item_template_id']);
 				for($i = 0; $i < $byproduct['quantity']; $i++) {
-					$this->gain_item( $byproduct );
+					$this->gain_item( $item_template );
 				}
 			}
 
@@ -220,7 +243,7 @@ ORDER BY `clock` DESC'.$limit;
 
 			// Increase player's level if any
 			if( $result->tech > $this->tech ) {
-				$this->max_energy += $result->tech - $this->tech;
+				$this->max_energy += ($result->tech - $this->tech) * 10;
 				$this->tech = $result->tech;
 				$this->save();
 			}
@@ -253,7 +276,7 @@ ORDER BY `clock` DESC'.$limit;
 	}
 
 	public function pass_time( $time ) {
-		$item_list = $this->get_inventory_list();
+		$item_list = $this->get_item_list();
 
 		foreach( $item_list as $item ) {
 			$item->pass_time( $time );
