@@ -20,6 +20,7 @@
           <th>Member</th>
           <th>Active</th>
           <th>Api Key</th>
+          <th>Tech</th>
           <th>Max Energy</th>
           <th>Last Active</th>
           <th>Created</th>        </tr>
@@ -42,6 +43,7 @@
           <td>'.$member_temp->name.'</td>
           <td>'.$tab_visible[$player->active].'</td>
           <td>'.(is_array($player->api_key)?nl2br(parameters_to_string($player->api_key)):$player->api_key).'</td>
+          <td>'.(is_array($player->tech)?nl2br(parameters_to_string($player->tech)):$player->tech).'</td>
           <td>'.(is_array($player->max_energy)?nl2br(parameters_to_string($player->max_energy)):$player->max_energy).'</td>
           <td>'.guess_time($player->last_active, GUESS_DATETIME_LOCALE).'</td>
           <td>'.guess_time($player->created, GUESS_DATETIME_LOCALE).'</td>

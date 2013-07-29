@@ -10,6 +10,7 @@ class Player_Model extends DBObject {
   protected $_name = null;
   protected $_active = null;
   protected $_api_key = null;
+  protected $_tech = null;
   protected $_max_energy = null;
   protected $_last_active = null;
   protected $_created = null;
@@ -35,6 +36,9 @@ class Player_Model extends DBObject {
   }
   public function set_active($active) {
     if($active) $data = 1; else $data = 0; $this->_active = $data;
+  }
+  public function set_tech($tech) {
+    if( is_numeric($tech) && (int)$tech == $tech) $data = intval($tech); else $data = null; $this->_tech = $data;
   }
   public function set_max_energy($max_energy) {
     if( is_numeric($max_energy) && (int)$max_energy == $max_energy) $data = intval($max_energy); else $data = null; $this->_max_energy = $data;
@@ -94,6 +98,10 @@ WHERE `member_id` = ".mysql_ureal_escape_string($member_id);
           HTMLHelper::genererTextArea( "api_key", parameters_to_string( $this->get_api_key() ), array(), "Api Key *" ):
           HTMLHelper::genererInputText( "api_key", $this->get_api_key(), array(), "Api Key *")).'
         </p>
+        <p class="field">'.(is_array($this->get_tech())?
+          HTMLHelper::genererTextArea( "tech", parameters_to_string( $this->get_tech() ), array(), "Tech *" ):
+          HTMLHelper::genererInputText( "tech", $this->get_tech(), array(), "Tech *")).'
+        </p>
         <p class="field">'.(is_array($this->get_max_energy())?
           HTMLHelper::genererTextArea( "max_energy", parameters_to_string( $this->get_max_energy() ), array(), "Max Energy *" ):
           HTMLHelper::genererInputText( "max_energy", $this->get_max_energy(), array(), "Max Energy *")).'
@@ -124,9 +132,10 @@ WHERE `member_id` = ".mysql_ureal_escape_string($member_id);
       case 1 : $return = "Le champ <strong>Member Id</strong> est obligatoire."; break;
       case 2 : $return = "Le champ <strong>Name</strong> est obligatoire."; break;
       case 3 : $return = "Le champ <strong>Api Key</strong> est obligatoire."; break;
-      case 4 : $return = "Le champ <strong>Max Energy</strong> est obligatoire."; break;
-      case 5 : $return = "Le champ <strong>Last Active</strong> est obligatoire."; break;
-      case 6 : $return = "Le champ <strong>Created</strong> est obligatoire."; break;
+      case 4 : $return = "Le champ <strong>Tech</strong> est obligatoire."; break;
+      case 5 : $return = "Le champ <strong>Max Energy</strong> est obligatoire."; break;
+      case 6 : $return = "Le champ <strong>Last Active</strong> est obligatoire."; break;
+      case 7 : $return = "Le champ <strong>Created</strong> est obligatoire."; break;
       default: $return = "Erreur de saisie, veuillez vérifier les champs.";
     }
     return $return;
@@ -145,9 +154,10 @@ WHERE `member_id` = ".mysql_ureal_escape_string($member_id);
     $return[] = Member::check_compulsory($this->get_member_id(), 1, true);
     $return[] = Member::check_compulsory($this->get_name(), 2);
     $return[] = Member::check_compulsory($this->get_api_key(), 3);
-    $return[] = Member::check_compulsory($this->get_max_energy(), 4, true);
-    $return[] = Member::check_compulsory($this->get_last_active(), 5);
-    $return[] = Member::check_compulsory($this->get_created(), 6);
+    $return[] = Member::check_compulsory($this->get_tech(), 4, true);
+    $return[] = Member::check_compulsory($this->get_max_energy(), 5, true);
+    $return[] = Member::check_compulsory($this->get_last_active(), 6);
+    $return[] = Member::check_compulsory($this->get_created(), 7);
 
     $return = array_unique($return);
     if(($true_key = array_search(true, $return, true)) !== false) {

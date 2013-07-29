@@ -30,6 +30,10 @@
               <span class="value"><?php echo is_array($player->api_key)?nl2br(parameters_to_string( $player->api_key )):$player->api_key?></span>
             </p>
             <p class="field">
+              <span class="libelle">Tech</span>
+              <span class="value"><?php echo is_array($player->tech)?nl2br(parameters_to_string( $player->tech )):$player->tech?></span>
+            </p>
+            <p class="field">
               <span class="libelle">Max Energy</span>
               <span class="value"><?php echo is_array($player->max_energy)?nl2br(parameters_to_string( $player->max_energy )):$player->max_energy?></span>
             </p>

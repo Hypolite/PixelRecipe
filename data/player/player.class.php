@@ -56,7 +56,7 @@ WHERE `member_id` = '.$member->id;
 		}
 		return $return;
 	}
-        
+
 	public function get_current_energy() {
 		$sql = '
 SELECT IFNULL(SUM(`time_taken`), 0)
@@ -64,14 +64,14 @@ FROM `player_craft_log`
 WHERE `player_id` = '.mysql_ureal_escape_string($this->id);
 		$res = mysql_uquery($sql);
 		$energy_consumed = array_pop(mysql_fetch_row($res));
-		
+
 		$sql = '
 SELECT IFNULL(SUM(`delta`), 0)
 FROM `player_energy_log`
 WHERE `player_id` = '.mysql_ureal_escape_string($this->id);
 		$res = mysql_uquery($sql);
 		$energy_gained = array_pop(mysql_fetch_row($res));
-		
+
 		return $energy_gained - $energy_consumed;
 	}
 
@@ -131,10 +131,10 @@ ORDER BY `clock` DESC'.$limit;
 
 		return true;
 	}
-	
+
 	public function sleep() {
 		$sleep_gain = 0;
-		
+
 		$current_energy = $this->current_energy;
 		if( $current_energy < $this->max_energy ) {
 			$time_delta = time() - guess_time( $this->last_active, GUESS_TIME_TIMESTAMP );
@@ -148,54 +148,54 @@ ORDER BY `clock` DESC'.$limit;
 				$player_energy_log->delta = $sleep_gain;
 				$player_energy_log->timestamp = time();
 				$player_energy_log->save();
-				
+
 				$this->pass_time($sleep_gain);
 			}
 		}
-		
+
 		return $sleep_gain;
 	}
-	
+
 	public function eat(Item $item) {
 		if( $item->id === null )
 			throw new Exception('Non-existing item.');
-			
+
 		if( $item->owner_id != $this->id )
 			throw new Exception('Item '.$item->name.' doesn\'t belong to you.');
-		
+
 		if( $item->destroyed )
 			throw new Exception('Item '.$item->name.' is destroyed.');
-		
+
 		if( $this->current_energy >= $this->max_energy )
 			throw new Exception('You are already full.');
-		
+
 		if( !$item->is_edible() )
 			throw new Exception('Item '.$item->name.' is not edible.');
-		
-		
-		
+
+
+
 		$player_energy_log = Player_Energy_Log::instance();
 		$player_energy_log->player_id = $this->id;
 		$player_energy_log->reason = 'Food';
 		$player_energy_log->delta = $item->get_ability_points_provided(8);
 		$player_energy_log->timestamp = time();
 		$player_energy_log->save();
-		
+
 		$item->destroy();
 	}
 
 	public function craft( Blueprint $blueprint ) {
 		if( $blueprint->id === null )
 			throw new Exception('Non-existing blueprint.');
-		
+
 		$time_taken = $blueprint->time;
-			
+
 		if( $time_taken > $this->current_energy )
 			throw new Exception('You don\'t have enough energy to craft this item.');
 
 		try {
 			mysql_uquery('BEGIN');
-			
+
 			// Remove Consumables from player's inventory
 			$consumable_list = $blueprint->get_consumable_list();
 
@@ -210,13 +210,20 @@ ORDER BY `clock` DESC'.$limit;
 			foreach( $byproduct_list as $byproduct ) {
 				$item_template = Item_Template::instance($byproduct['item_template_id']);
 				for($i = 0; $i < $byproduct['quantity']; $i++) {
-					$this->gain_item( $byproduct );				
+					$this->gain_item( $byproduct );
 				}
 			}
 
 			// Add the result to player's inventory
 			$result = Item_Template::instance($blueprint->item_template_id);
 			$this->gain_item( $result );
+
+			// Increase player's level if any
+			if( $result->tech > $this->tech ) {
+				$this->max_energy += $result->tech - $this->tech;
+				$this->tech = $result->tech;
+				$this->save();
+			}
 
 			// Make time pass for the player's inventory
 			$this->pass_time($time_taken);
