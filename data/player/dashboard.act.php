@@ -28,6 +28,19 @@
 		Page::add_message('You slept during '.$sleep_gain.' cycles for '.$sleep_gain.' Energy.');
 	}
 
+	foreach( $current_player->get_destroyed_item_activity() as $item_destroyed ) {
+		$item_template = Item_Template::instance($item_destroyed->item_template_id);
+		if( $item_template->next_item_template_id ) {
+			Page::add_message('Item '.$item_destroyed->name.' has turned into a new item.');
+		}else {
+			Page::add_message('Item '.$item_destroyed->name.' has been destroyed out of age.');
+		}
+	}
+
+	foreach( $current_player->get_created_item_activity() as $item_created ) {
+		Page::add_message('You got a new '.$item_created->name.' in your inventory.');
+	}
+
 	$current_player->last_active = time();
 	$current_player->save();
 ?>

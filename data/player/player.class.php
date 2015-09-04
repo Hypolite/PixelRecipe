@@ -99,11 +99,32 @@ GROUP BY i_t.`id`';
 
 	public function get_item_list() {
 		$sql = '
-SELECT *, COUNT(*) AS `count`, MAX(`id`) AS `oldest_item_id`
+SELECT *
 FROM `item`
 WHERE `owner_id` = '.mysql_ureal_escape_string($this->id).'
-AND `destroyed` IS NULL
-GROUP BY `item_template_id`';
+AND `destroyed` IS NULL';
+
+		return Item::sql_to_list($sql);
+	}
+
+	public function get_destroyed_item_activity() {
+		$sql = '
+SELECT i.*
+FROM `item` i
+JOIN `player` p ON p.`id` = i.`owner_id`
+WHERE `owner_id` = '.mysql_ureal_escape_string($this->id).'
+AND i.`destroyed` > p.`last_active`';
+
+		return Item::sql_to_list($sql);
+	}
+
+	public function get_created_item_activity() {
+		$sql = '
+SELECT i.*
+FROM `item` i
+JOIN `player` p ON p.`id` = i.`owner_id`
+WHERE `owner_id` = '.mysql_ureal_escape_string($this->id).'
+AND i.`created` > p.`last_active`';
 
 		return Item::sql_to_list($sql);
 	}
@@ -205,6 +226,9 @@ ORDER BY `clock` DESC'.$limit;
 		$player_energy_log->save();
 
 		$item->destroy();
+
+		$this->last_active = time();
+		$this->save();
 	}
 
 	public function craft( Blueprint $blueprint ) {
@@ -247,6 +271,9 @@ ORDER BY `clock` DESC'.$limit;
 				$this->tech = $result->tech;
 				$this->save();
 			}
+
+			$this->last_active = time();
+			$this->save();
 
 			// Make time pass for the player's inventory
 			$this->pass_time($time_taken);
