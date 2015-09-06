@@ -42,7 +42,7 @@ WHERE r_c.`blueprint_id` = '.mysql_ureal_escape_string($this->id);
 
 	public static function get_available_blueprint_list( Player $player ) {
 		$sql = '
-SELECT r.*
+SELECT r.*, b_c.`consumable_count`
 FROM `blueprint` r
 JOIN `blueprint_consumable` r_c ON r_c.`blueprint_id` = r.`id`
 JOIN (
@@ -52,8 +52,15 @@ JOIN (
 	AND `destroyed` IS NULL
 	GROUP BY `item_template_id`
 ) `p_i`
-ON p_i.`item_template_id` = r_c.`item_template_id` AND p_i.`quantity` >= r_c.`quantity`';
-
+ON p_i.`item_template_id` = r_c.`item_template_id` AND p_i.`quantity` >= r_c.`quantity`
+JOIN (
+	SELECT `blueprint_id`, COUNT(*) AS `consumable_count`
+	FROM `blueprint_consumable`
+	GROUP BY blueprint_id
+) b_c
+ON b_c.blueprint_id = r.id
+GROUP BY r.id
+HAVING b_c.`consumable_count` = COUNT(p_i.`item_template_id`)';
 		return Blueprint::sql_to_list($sql);
 	}
 
