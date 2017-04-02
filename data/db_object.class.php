@@ -583,7 +583,7 @@ WHERE `id` = ".mysql_ureal_escape_string($this->get_id());
 		 *
 		 * @param array $post_data
 		 */
-		public function load_from_html_form($post_data) {
+		public function load_from_html_form($post_data, $file_data) {
 			if(ini_get('magic_quote_gpc')) {
 				$post_data = rstripslashes($post_data);
 			}
