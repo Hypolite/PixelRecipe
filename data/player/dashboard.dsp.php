@@ -48,7 +48,7 @@
 ?>
 <ul>
 <?php foreach( $gather_blueprints as $blueprint ) :?>
-	<li><a href="<?php echo Page::get_url('craft', array('blueprint_id' => $blueprint->id))?>"><?php echo $blueprint->name?></a></li>
+	<li><a href="<?php echo Page::get_url('craft', array('blueprint_id' => $blueprint->id))?>"><?php echo $blueprint->name?></a> (<?php echo __('%s cycles', $blueprint->time)?>)</li>
 <?php endforeach;?>
 </ul>
 <h4>Craft</h4>
@@ -57,6 +57,6 @@
 ?>
 <ul>
 <?php foreach( $gather_blueprints as $blueprint ) :?>
-	<li><a href="<?php echo Page::get_url('craft', array('blueprint_id' => $blueprint->id))?>"><?php echo $blueprint->name?></a></li>
+	<li><a href="<?php echo Page::get_url('craft', array('blueprint_id' => $blueprint->id))?>"><?php echo $blueprint->name?></a> (<?php echo __('%s cycles', $blueprint->time)?>)</li>
 <?php endforeach;?>
 </ul>
