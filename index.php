@@ -23,7 +23,23 @@
   define('URL_ROOT_RELATIVE', $URL_ROOT_RELATIVE);
 
   //Relative URL used, calculate absolute URL
-  $protocol = strtolower(substr($_SERVER['SERVER_PROTOCOL'], 0, strpos($_SERVER['SERVER_PROTOCOL'], "/", 0)));
+  if (isset($_SERVER['HTTPS']) &&
+      ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
+      isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+      $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+    $protocol = 'https';
+  } else {
+    $protocol = 'http';
+  }
+
+  if (isset($_SERVER['HTTPS']) &&
+      ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
+      isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+      $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+    $protocol = 'https';
+  } else {
+    $protocol = 'http';
+  }
   // Constante principale, c'est l'URL absolue de la base du site
   define("URL_ROOT", $protocol."://".$_SERVER['HTTP_HOST'].URL_ROOT_RELATIVE.'/');
   // PATH absolu de la base du site
